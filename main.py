@@ -32,13 +32,20 @@ async def root():
 
 @app.get('/customers/')
 def get_customers():
-    data = list(collection.find({}, {'_id': False}))
+    data = list(collection.find())
+
+    for item in data:
+        item['_id'] = str(item['_id'])
+
+    print(f'opa nene: {data}')
     return data
 
 
 @app.get('/customers/{id}')
 def get_customer(id: str):
-    data = collection.find_one({'_id': ObjectId(id)}, {'_id': False})
+    data = collection.find_one({'_id': ObjectId(id)})
+    data['_id'] = str(data['_id'])
+
     return data
 
 
