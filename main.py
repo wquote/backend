@@ -3,11 +3,12 @@
 # [ ] motor_asyncio for async requests to database
 # [ ] ObjectId
 
+import os
 from fastapi import FastAPI
 from pymongo import MongoClient
 from pydantic import BaseModel
 from bson.objectid import ObjectId
-
+from config import Settings
 
 class Customer(BaseModel):
     name: str
@@ -17,7 +18,10 @@ class Customer(BaseModel):
 
 
 # Connect to MongoDB
-client = MongoClient("mongodb://wquote-db:27017/")
+# mongodb://localhost:27017/wquote-db
+# mongodb+srv://usr_admin_rw:ZOh7rFTujTPvznV4@wquote-db.5wzf4ed.mongodb.net/test
+settings = Settings()
+client = MongoClient(settings.MONGODB_CONNECTION)
 db = client["wquote"]
 collection = db["customers"]
 
