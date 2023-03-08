@@ -9,9 +9,24 @@ from pydantic import BaseModel
 from bson.objectid import ObjectId
 from config import Settings
 from pymongo import MongoClient
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+
+origins = [
+    "http://localhost:4201",
+    "http://wquote.onrender.com"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Connect to MongoDB
@@ -42,7 +57,6 @@ def readAll():
     for item in data:
         item['_id'] = str(item['_id'])
 
-    print(f'opa nene: {data}')
     return data
 
 
