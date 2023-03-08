@@ -17,7 +17,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:4201",
-    "http://wquote.onrender.com"
+    "https://wquote.onrender.com"
 ]
 
 app.add_middleware(
