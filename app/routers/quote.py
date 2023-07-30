@@ -14,8 +14,13 @@ router = APIRouter(
 
 
 @router.get('/', status_code=status.HTTP_200_OK, response_model=List[QuoteModel])
-async def read_all() -> List[QuoteModel]:
-    items: List[QuoteModel] = business.quote.read_all()
+async def read_all(idCustomer: str | None = None) -> List[QuoteModel]:
+    items: List[QuoteModel] = []
+
+    if idCustomer:
+        items = business.quote.read_by_customer(idCustomer)
+    else:
+        items = business.quote.read_all()
 
     return items
 

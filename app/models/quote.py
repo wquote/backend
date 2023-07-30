@@ -5,6 +5,12 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
+class QuoteJobAddress(BaseModel):
+    id: str
+    address: str
+    alias: str
+
+
 class QuoteModel(BaseModel):
     id: str
     id_customer: str
@@ -12,6 +18,7 @@ class QuoteModel(BaseModel):
     date: datetime | None
     profit: float | None
     total_cost: float | None
+    job_address: List[QuoteJobAddress] | None
 
 
 class QuoteUpdateModel(BaseModel):
@@ -20,6 +27,7 @@ class QuoteUpdateModel(BaseModel):
     date: datetime | None
     profit: float | None
     total_cost: float | None
+    job_address: List[QuoteJobAddress] | None
 
 
 class QuoteDTO(BaseModel):
@@ -29,3 +37,4 @@ class QuoteDTO(BaseModel):
     date: datetime
     profit: float
     total_cost: float
+    job_address: List[QuoteJobAddress] | None

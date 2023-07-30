@@ -11,6 +11,14 @@ collection = db['quotes']
 
 
 class QuoteService():
+    def read(self, id: str) -> QuoteModel | None:
+        if (item_dict := collection.find_one({'id': id})) is not None:
+            item: QuoteModel = QuoteModel(**item_dict)
+
+            return item
+
+        return None
+
     def read_all(self) -> List[QuoteModel]:
         items_dict: List[dict] = list(collection.find())
         items: List[QuoteModel] = []
@@ -20,13 +28,14 @@ class QuoteService():
 
         return items
 
-    def read(self, id: str) -> QuoteModel | None:
-        if (item_dict := collection.find_one({'id': id})) is not None:
-            item: QuoteModel = QuoteModel(**item_dict)
+    def read_by_customer(self, id_customer: str) -> List[QuoteModel]:
+        items_dict: List[dict] = list(collection.find({'id_customer': id_customer}))
+        items: List[QuoteModel] = []
 
-            return item
+        for i in items_dict:
+            items.append(QuoteModel(**i))
 
-        return None
+        return items
 
     def delete(self, id: str) -> bool | None:
         if (collection.find_one_and_delete({'id': id})) is not None:
