@@ -1,32 +1,41 @@
+from typing import Annotated, List
+import uuid
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from bson import ObjectId
 
-from typing import List
-from pydantic import BaseModel, EmailStr, Field
-
-from app.utils import generate_uuid4
-
-
-class CustomerJobAddress(BaseModel):
-    id: str
-    address: str
-    alias: str
+from app.models.base import AppBaseModel, PyObjectId
 
 
-class CustomerModel(BaseModel):
-    id: str = Field(...)
-    name: str = Field(...)
-    address: str | None
-    phone: str | None
-    email: EmailStr | None
-    job_address: List[CustomerJobAddress] | None
+class CustomerJobAddress(AppBaseModel):
+    address: str | None = None
+    notes: str | None = None
 
 
-class CustomerCreateModel(CustomerModel):
-    id: str = Field(default_factory=lambda: generate_uuid4())
+class CustomerBase(AppBaseModel):
+    first_name: str | None = None
+    last_name: str | None = None
+    home_address: str | None = None
+    phones: List[str] | None = None
+    emails: List[EmailStr] | None = None
+    notes: str | None = None
+    job_address: List[CustomerJobAddress] | None = None
 
 
-class CustomerUpdateModel(BaseModel):
-    name: str | None
-    address: str | None
-    phone: str | None
-    email: EmailStr | None
-    job_address: List[CustomerJobAddress] | None
+class Customer(CustomerBase):
+    id: str = Field(alias='_id')
+
+
+class CustomerCreate(CustomerBase):
+    first_name: str
+    last_name: str
+
+
+class CustomerUpdate(CustomerBase):
+    pass
+
+
+class CustomerInDB(CustomerBase):
+    id: Annotated[ObjectId, PyObjectId] = Field(default_factory=ObjectId, alias='_id')
+
+    class Config:
+        json_encoders = {ObjectId: str}

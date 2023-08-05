@@ -1,44 +1,47 @@
+# referênciaa:
+# - https://www.mongodb.com/developer/languages/python/python-quickstart-fastapi/
+# - https://stackoverflow.com/questions/76686267/what-is-the-new-way-to-declare-mongo-objectid-with-pydantic-v2-0
 
-# referência: https://www.mongodb.com/developer/languages/python/python-quickstart-fastapi/
+from typing import Any
 
 from bson import ObjectId
-from pydantic import fields
+from pydantic import BaseModel
+from pydantic.json_schema import JsonSchemaValue
+from pydantic_core import core_schema
 
 
-class PyObjectId(ObjectId):
+def to_camel_case(input_string):
+    words = input_string.split('_')
+    return words[0].lower() + ''.join(word.capitalize() for word in words[1:])
+
+
+class AppBaseModel(BaseModel):
+    class Config:
+        alias_generator = to_camel_case
+        populate_by_name = True
+
+
+class PyObjectId:
     @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+    def validate_object_id(cls, v: Any, handler) -> ObjectId:
+        if isinstance(v, ObjectId):
+            return v
+
+        s = handler(v)
+        if ObjectId.is_valid(s):
+            return ObjectId(s)
+        else:
+            raise ValueError("Invalid ObjectId")
 
     @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid objectid")
-        return ObjectId(v)
+    def __get_pydantic_core_schema__(cls, source_type, _handler) -> core_schema.CoreSchema:
+        assert source_type is ObjectId
+        return core_schema.no_info_wrap_validator_function(
+            cls.validate_object_id,
+            core_schema.str_schema(),
+            serialization=core_schema.to_string_ser_schema(),
+        )
 
     @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
-
-
-class ObjectIdStr(str):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
-    @classmethod
-    def validate(cls, value):
-        if not ObjectId.is_valid(value):
-            raise ValueError('Invalid ObjectId')
-        return cls(value)
-
-
-class ObjectIdField(fields.ModelField):
-    def __init__(self, **kwargs):
-        super().__init__(alias='_id', **kwargs)
-
-    # Override the prepare method to convert ObjectId to str
-    def prepare(self, value):
-        if isinstance(value, ObjectId):
-            return ObjectIdStr(str(value))
-        return value
+    def __get_pydantic_json_schema__(cls, _core_schema, handler) -> JsonSchemaValue:
+        return handler(core_schema.str_schema())

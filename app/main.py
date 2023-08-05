@@ -34,10 +34,10 @@ async def root():
 
 
 app.include_router(customer.router)
-app.include_router(material.router)
-app.include_router(deck_quote.router)
-app.include_router(deck_board_template.router)
-app.include_router(quote.router)
+# app.include_router(material.router)
+# app.include_router(deck_quote.router)
+# app.include_router(deck_board_template.router)
+# app.include_router(quote.router)
 
 
 if __name__ == "__main__":

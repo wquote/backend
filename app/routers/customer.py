@@ -1,9 +1,11 @@
 
 from typing import List
 from fastapi import APIRouter, Body, HTTPException, Path, Response, status
+from fastapi.encoders import jsonable_encoder
 
 from app import business
-from app.models.customer import CustomerModel, CustomerCreateModel, CustomerUpdateModel
+from app.models.customer import Customer, CustomerCreate, CustomerUpdate
+from app.database import db
 
 
 NOT_FOUND_MSG: str = 'Customer not found.'
@@ -13,32 +15,31 @@ router = APIRouter(
 )
 
 
-@router.post('/', status_code=status.HTTP_201_CREATED)
-async def create(body: CustomerCreateModel, response: Response):
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=str | None)
+async def create(body: CustomerCreate):
     inserted_id: str | None = business.customer.create(body)
 
-    if inserted_id is not None:
-        response.headers["Location"] = inserted_id
+    return inserted_id
 
 
-@router.get('/', status_code=status.HTTP_200_OK, response_model=List[CustomerModel])
-async def read_all() -> List[CustomerModel]:
-    items: List[CustomerModel] = business.customer.read_all()
+@router.get('/', status_code=status.HTTP_200_OK, response_model=List[Customer])
+async def read_all() -> List[Customer]:
+    items: List[Customer] = business.customer.read_all()
 
     return items
 
 
-@router.get('/{id}', status_code=status.HTTP_200_OK, response_model=CustomerModel)
-async def read(id: str):
-    item: CustomerModel | None = business.customer.read(id)
-    if item is not None:
+@router.get('/{id}', status_code=status.HTTP_200_OK, response_model=Customer)
+async def read(id: str) -> Customer:
+    item: Customer | None = business.customer.read(id)
+    if item:
         return item
 
     raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)
 
 
 @router.put('/{id}', status_code=status.HTTP_204_NO_CONTENT)
-async def update(id: str, body: CustomerUpdateModel):
+async def update(id: str, body: CustomerUpdate):
     if (business.customer.update(id, body)):
         return None
 
