@@ -8,7 +8,7 @@ from app.models.base import AppBaseModel, PyObjectId
 
 class CustomerJobAddress(AppBaseModel):
     address: str | None = None
-    notes: str | None = None
+    description: str | None = None
 
 
 class CustomerBase(AppBaseModel):
