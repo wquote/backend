@@ -6,11 +6,6 @@ from bson import ObjectId
 from app.models.base import AppBaseModel, PyObjectId
 
 
-class CustomerJobAddress(AppBaseModel):
-    address: str | None = None
-    description: str | None = None
-
-
 class CustomerBase(AppBaseModel):
     first_name: str | None = None
     last_name: str | None = None
@@ -18,7 +13,7 @@ class CustomerBase(AppBaseModel):
     phones: List[str] | None = None
     emails: List[EmailStr] | None = None
     notes: str | None = None
-    job_address: List[CustomerJobAddress] | None = None
+    job_address: List[str] | None = None
 
 
 class Customer(CustomerBase):
