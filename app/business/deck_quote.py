@@ -2,36 +2,38 @@ from datetime import datetime
 from typing import List
 
 from app import business, services
-from app.models.deck_quote import (DeckBoardSpecification, DeckBoardSpecMaterialModel,
-                                   DeckQuoteModel, DeckQuoteUpdateModel, DeckModel)
 from app.models.deck_board_template import DeckBoardTemplateModel
+from app.models.deck_quote import (DeckBoardSpecification,
+                                   DeckBoardSpecMaterial, DeckQuote,
+                                   DeckQuoteCreate, DeckQuoteUpdate)
 
 
 class DeckQuoteBusiness():
 
-    def create(self, deck_quote: DeckQuoteModel) -> str | None:
-        processed_deck_quote_dict: dict = self.process_quote(deck_quote).dict()
-        processed_deck_quote = DeckQuoteModel(**processed_deck_quote_dict)
+    def create(self, item: DeckQuoteCreate) -> str | None:
+        # processed_deck_quote: DeckQuoteCreate = self.process_quote(item)
+        item.profit = item.deck.main_areas[0].width * item.deck.main_areas[0].depth
+        item.value = 15000 * item.deck.main_areas[0].height + item.profit
 
-        if (inserted_id := services.deck_quote.create(processed_deck_quote)) is not None:
+        if (inserted_id := services.deck_quote.create(item)) is not None:
             return inserted_id
 
         return None
 
-    def read_all(self) -> List[DeckQuoteModel]:
-        deck_quotes: List[DeckQuoteModel] = services.deck_quote.read_all()
+    def read_all(self) -> List[DeckQuote]:
+        deck_quotes: List[DeckQuote] = services.deck_quote.read_all()
 
         return deck_quotes
 
-    def read(self, id: str) -> DeckQuoteModel | None:
+    def read(self, id: str) -> DeckQuote | None:
         if (deck_quote := services.deck_quote.read(id)) is not None:
             return deck_quote
 
         return None
 
-    def update(self, id: str, deck_quote: DeckQuoteUpdateModel) -> bool | None:
+    def update(self, id: str, deck_quote: DeckQuoteUpdate) -> bool | None:
         processed_deck_quote_dict: dict = self.process_quote(deck_quote).dict()
-        processed_deck_quote = DeckQuoteUpdateModel(**processed_deck_quote_dict)
+        processed_deck_quote = DeckQuoteUpdate(**processed_deck_quote_dict)
 
         if (services.deck_quote.update(id, processed_deck_quote)):
             return True
@@ -44,7 +46,7 @@ class DeckQuoteBusiness():
 
         return None
 
-    def process_quote(self, deck_quote: DeckQuoteModel | DeckQuoteUpdateModel) -> DeckQuoteModel | DeckQuoteUpdateModel:
+    def process_quote(self, deck_quote: DeckQuoteCreate | DeckQuoteUpdate) -> DeckQuoteCreate | DeckQuoteUpdate:
         if deck_quote.deck:
             deck = deck_quote.deck
             width: float = deck.main_areas[0].width
@@ -69,7 +71,7 @@ class DeckQuoteBusiness():
             name_template: str = template.name
 
             # materials
-            board_materials: List[DeckBoardSpecMaterialModel] = []
+            board_materials: List[DeckBoardSpecMaterial] = []
             for m in template.materials:
                 if m.is_default:
                     id_material: str = m.id
@@ -88,7 +90,7 @@ class DeckQuoteBusiness():
                         "price_snapshot": price_snapshot
                     }
 
-                    board_material = DeckBoardSpecMaterialModel(**obj)
+                    board_material = DeckBoardSpecMaterial(**obj)
                     board_materials.append(board_material)
 
             amount_sum: float = sum(material.price_snapshot * material.qty for material in board_materials)

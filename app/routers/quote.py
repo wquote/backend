@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Body, HTTPException, Path, Response, status
 
 from app import business
-from app.models.quote import QuoteModel
+from app.models.quote import Quote
 
 
 NOT_FOUND_MSG: str = 'Quote not found.'
@@ -13,9 +13,9 @@ router = APIRouter(
 )
 
 
-@router.get('/', status_code=status.HTTP_200_OK, response_model=List[QuoteModel])
-async def read_all(idCustomer: str | None = None) -> List[QuoteModel]:
-    items: List[QuoteModel] = []
+@router.get('/', status_code=status.HTTP_200_OK, response_model=List[Quote])
+async def read_all(idCustomer: str | None = None) -> List[Quote]:
+    items: List[Quote] = []
 
     if idCustomer:
         items = business.quote.read_by_customer(idCustomer)
@@ -25,9 +25,9 @@ async def read_all(idCustomer: str | None = None) -> List[QuoteModel]:
     return items
 
 
-@router.get('/{id}', status_code=status.HTTP_200_OK, response_model=QuoteModel)
+@router.get('/{id}', status_code=status.HTTP_200_OK, response_model=Quote)
 async def read(id: str):
-    item: QuoteModel | None = business.quote.read(id)
+    item: Quote | None = business.quote.read(id)
     if item is not None:
         return item
 

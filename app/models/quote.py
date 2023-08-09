@@ -1,40 +1,39 @@
 
 from datetime import datetime
-from typing import List
+from typing import Annotated, List
+from bson import ObjectId
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-
-class QuoteJobAddress(BaseModel):
-    id: str
-    address: str
-    alias: str
+from app.models.base import AppBaseModel, PyObjectId
 
 
-class QuoteModel(BaseModel):
-    id: str
+class QuoteBase(AppBaseModel):
+    id_customer: str | None = None
+    job_address: str | None = None
+    type: str | None = None
+    date: datetime | None = None
+    profit: float | None = None
+    value: float | None = None
+    notes: str | None = None
+
+
+class Quote(QuoteBase):
+    id: str = Field(alias='_id')
+
+
+class QuoteCreate(QuoteBase):
     id_customer: str
+    job_address: str
     type: str
-    date: datetime | None
-    profit: float | None
-    total_cost: float | None
-    job_address: List[QuoteJobAddress] | None
 
 
-class QuoteUpdateModel(BaseModel):
-    id_customer: str
-    type: str
-    date: datetime | None
-    profit: float | None
-    total_cost: float | None
-    job_address: List[QuoteJobAddress] | None
+class QuoteUpdate(QuoteBase):
+    pass
 
 
-class QuoteDTO(BaseModel):
-    id: str
-    name_customer: str
-    type: str
-    date: datetime
-    profit: float
-    total_cost: float
-    job_address: List[QuoteJobAddress] | None
+class QuoteInDB(QuoteBase):
+    id: Annotated[ObjectId, PyObjectId] = Field(default_factory=ObjectId, alias='_id')
+
+    class Config:
+        json_encoders = {ObjectId: str}

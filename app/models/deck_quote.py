@@ -1,59 +1,65 @@
 
 from datetime import datetime
-from typing import List
+from typing import Annotated, List
+from bson import ObjectId
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
-from app.models.quote import QuoteModel, QuoteUpdateModel
-from app.utils import generate_uuid4
+from app.models.base import AppBaseModel, PyObjectId
+from app.models.quote import Quote, QuoteBase, QuoteCreate
 
 
-class Area(BaseModel):
+class Area(AppBaseModel):
     width: float
     depth: float
+    height: float
 
 
-class Stair(BaseModel):
+class Stair(AppBaseModel):
     width: float
     riser: float
 
 
-class DeckModel(BaseModel):
+class Deck(AppBaseModel):
     main_areas: List[Area]
-    lading_areas: List[Area] | None
-    stairs: List[Stair] | None
+    lading_areas: List[Area] | None = None
+    stairs: List[Stair] | None = None
 
 
-class DeckUpdateModel(BaseModel):
-    main_areas: List[Area] | None
-    lading_areas: List[Area] | None
-    stairs: List[Stair] | None
-
-
-class DeckBoardSpecMaterialModel(BaseModel):
+class DeckBoardSpecMaterial(AppBaseModel):
     id: str
-    desc: str
-    qty: float
+    name_snapshot: str
     price_snapshot: float
+    qty: float
 
 
-class DeckBoardSpecification(BaseModel):
+class DeckBoardSpecification(AppBaseModel):
     id_deckboard_template: str
     name: str
-    materials: List[DeckBoardSpecMaterialModel]
+    materials: List[DeckBoardSpecMaterial]
     tax: float
     cost: float
 
 
-class DeckQuoteModel(QuoteModel):
-    deck: DeckModel
-    board_specs: List[DeckBoardSpecification] | None
+class DeckQuoteBase(QuoteBase):
+    deck: Deck | None = None
+    # board_specifications: List[DeckBoardSpecification] | None = None
 
 
-class DeckQuoteCreateModel(DeckQuoteModel):
-    id: str = Field(default_factory=lambda: generate_uuid4())
+class DeckQuote(Quote, DeckQuoteBase):
+    pass
 
 
-class DeckQuoteUpdateModel(QuoteUpdateModel):
-    deck: DeckModel | None
-    board_specs: List[DeckBoardSpecification] | None
+class DeckQuoteCreate(QuoteCreate, DeckQuoteBase):
+    deck: Deck
+
+
+class DeckQuoteUpdate(DeckQuoteBase):
+    pass
+
+
+class DeckQuoteInDB(DeckQuoteBase):
+    id: Annotated[ObjectId, PyObjectId] = Field(default_factory=ObjectId, alias='_id')
+
+    class Config:
+        json_encoders = {ObjectId: str}
