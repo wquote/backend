@@ -1,12 +1,14 @@
 quote = {
   id: '123',
   id_customer: '11aa22bb',
+  job_addres: 'rua arape',
   type: 'deck',
   date: '2023-06-14',
   deck: {
     main_areas: [{
-        height: 10,
-        width: 20
+      width: 20,
+      height: 10,
+      height: 2
     }]
   },
   board_specifications: [
@@ -26,7 +28,7 @@ quote = {
     }
   ],
   profit: 5000,
-  total_cost: 25300
+  value: 25300
 }
 
 

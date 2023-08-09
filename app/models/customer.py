@@ -1,6 +1,5 @@
 from typing import Annotated, List
-import uuid
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import EmailStr, Field
 from bson import ObjectId
 
 from app.models.base import AppBaseModel, PyObjectId

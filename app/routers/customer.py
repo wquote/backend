@@ -1,11 +1,9 @@
 
 from typing import List
-from fastapi import APIRouter, Body, HTTPException, Path, Response, status
-from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, HTTPException, status
 
 from app import business
 from app.models.customer import Customer, CustomerCreate, CustomerUpdate
-from app.database import db
 
 
 NOT_FOUND_MSG: str = 'Customer not found.'
