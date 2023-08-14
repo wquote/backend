@@ -18,8 +18,8 @@ class QuoteBusiness():
 
         return items
 
-    def read_by_customer(self, customer_id: str) -> List[Quote]:
-        items: List[Quote] = services.quote.read_by_customer(customer_id)
+    def read_by_customer(self, id_customer: str) -> List[Quote]:
+        items: List[Quote] = services.quote.read_by_customer(id_customer)
 
         return items
 

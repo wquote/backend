@@ -1,25 +1,25 @@
 from typing import List
 from app import services
-from app.models.material import MaterialModel, MaterialUpdateModel
+from app.models.material import Material, MaterialCreate, MaterialUpdate
 
 
 class MaterialBusiness():
-    def create(self, material: MaterialModel) -> str | None:
+    def create(self, material: MaterialCreate) -> str | None:
         material_id: str | None = services.material.create(material)
 
         return material_id if material_id is not None else None
 
-    def read_all(self) -> List[MaterialModel]:
-        materials: List[MaterialModel] = services.material.read_all()
+    def read_all(self) -> List[Material]:
+        materials: List[Material] = services.material.read_all()
 
         return materials
 
-    def read(self, id: str) -> MaterialModel | None:
-        material: MaterialModel | None = services.material.read(id)
+    def read(self, id: str) -> Material | None:
+        material: Material | None = services.material.read(id)
 
         return material if material is not None else None
 
-    def update(self, id: str, material: MaterialUpdateModel) -> bool | None:
+    def update(self, id: str, material: MaterialUpdate) -> bool | None:
         if (services.material.update(id, material)):
             return True
 

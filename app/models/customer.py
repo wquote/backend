@@ -16,7 +16,7 @@ class CustomerBase(AppBaseModel):
 
 
 class Customer(CustomerBase):
-    id: str = Field(alias='_id')
+    id: str
 
 
 class CustomerCreate(CustomerBase):
@@ -28,8 +28,8 @@ class CustomerUpdate(CustomerBase):
     pass
 
 
-class CustomerInDB(CustomerBase):
-    id: Annotated[ObjectId, PyObjectId] = Field(default_factory=ObjectId, alias='_id')
+# class CustomerInDB(CustomerBase):
+#     id: Annotated[ObjectId, PyObjectId] = Field(default_factory=ObjectId, alias='_id')
 
-    class Config:
-        json_encoders = {ObjectId: str}
+#     class Config:
+#         json_encoders = {ObjectId: str}

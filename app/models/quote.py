@@ -19,7 +19,7 @@ class QuoteBase(AppBaseModel):
 
 
 class Quote(QuoteBase):
-    id: str = Field(alias='_id')
+    id: str
 
 
 class QuoteCreate(QuoteBase):
