@@ -16,6 +16,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:4201",
+    "http://localhost:4200",
     "https://wquote.onrender.com"
 ]
 
