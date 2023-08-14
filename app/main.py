@@ -30,13 +30,13 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello, wQuoter!"}
 
 
 app.include_router(customer.router)
 app.include_router(quote.router)
 app.include_router(deck_quote.router)
-# app.include_router(material.router)
+app.include_router(material.router)
 # app.include_router(deck_board_template.router)
 
 
