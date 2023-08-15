@@ -1,9 +1,18 @@
 
 from uuid import uuid4
+import random
 
 
 def generate_uuid4() -> str | None:
     return str(uuid4())
+
+
+def randomInt(start: int, end: int):
+    return round(random.uniform(start, end))
+
+
+def randomFloat(start: float, end: float):
+    return round(random.uniform(start, end), 2)
 
 
 # class JSONEncoder(json.JSONEncoder):

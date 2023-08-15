@@ -14,8 +14,8 @@ collection = db['quotes']
 
 class QuoteService(BaseService):
 
-    def read_by_customer(self, id_customer: str) -> List[Quote]:
-        items_list: List[dict] = list(collection.find({'id_customer': id_customer}))
+    def read_by_customer(self, customer_id: str) -> List[Quote]:
+        items_list: List[dict] = list(collection.find({'customer_id': customer_id}))
         items: List = [Quote(**decodeObjId(i)) for i in items_list]
 
         return items

@@ -1,24 +1,31 @@
 quote = {
   id: '123',
-  id_customer: '11aa22bb',
+  customer_id: '11aa22bb',
   job_addres: 'rua arape',
-  type: 'deck',
+  type: 'DECKING',
   date: '2023-06-14',
-  deck: {
+  profit: 5000,
+  value: 25300,
+
+  decking: {
     main_areas: [{
       width: 20,
       height: 10,
       height: 2
     }]
   },
-  board_specifications: [
+  
+  pressure_treated: [],
+
+  structural: [],
+
+  board_specs: [
     {
-      id_deckboard_template: 11,
+      // id_deckboard_template: 11,
       name: 'Pressure Treated Decking Boards',
       materials: [
         {
-          id: 1,
-          name_snapshot: 'Pressure Treated Decking Boards',
+          desc_snapshot: 'Pressure Treated Decking Boards',
           price_snapshot: 10,
           qty: 14
         }
@@ -27,12 +34,18 @@ quote = {
       cost: 120
     }
   ],
-  profit: 5000,
-  value: 25300
+
+  railling_specs: [],
+
+  rain_scape_specs: [],
+
+  finishing: [],
+
+  extras: [],
 }
 
 
-deckboard_templates = [
+decking_board_templates = [
   {
     id: 11,
     name: 'Pressure Treated Decking Boards',
@@ -58,7 +71,16 @@ deckboard_templates = [
   {
     id: 12,
     name: 'Trex Select Decking',
-    id_materials: [6,7,8,9]
+    id_materials: [
+      {
+        id: 1,
+        default: true
+      },
+      {
+        id: 2,
+        default: false
+      }
+    ]
   }
 ]
 

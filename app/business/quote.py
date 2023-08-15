@@ -1,33 +1,23 @@
 
-from typing import List
+from typing import Any, List
 
 from app import services
-from app.models.quote import Quote
+from app.business.base import BaseBusiness
+from app.models.quote import Quote, QuoteCreate
 
 
-class QuoteBusiness():
+class QuoteBusiness(BaseBusiness):
 
-    def read(self, id: str) -> Quote | None:
-        if (item := services.quote.read(id)) is not None:
-            return item
+    def create(self, item: QuoteCreate) -> str | None:
+        pass
 
-        return None
-
-    def read_all(self) -> List[Quote]:
-        items: List[Quote] = services.quote.read_all()
+    def read_by_customer(self, customer_id: str) -> List[Quote]:
+        items: List[Quote] = services.quote.read_by_customer(customer_id)
 
         return items
 
-    def read_by_customer(self, id_customer: str) -> List[Quote]:
-        items: List[Quote] = services.quote.read_by_customer(id_customer)
-
-        return items
-
-    def delete(self, id: str):
-        if (services.quote.delete(id)):
-            return True
-
-        return None
+    def update(self, id: str, item: Any) -> None:
+        pass
 
 
-quote = QuoteBusiness()
+quote = QuoteBusiness(services.quote)

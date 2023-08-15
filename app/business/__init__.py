@@ -2,5 +2,5 @@ from .customer import customer
 from .material import material
 from .quote import quote
 
-from .deck_quote import deck_quote
-from .deck_board_template import deck_board_template
+from .decking_quote import decking_quote
+from .decking_board_template import decking_board_template

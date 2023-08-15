@@ -1,32 +1,36 @@
-from typing import List, TypeVar, Generic, Optional
-from services import customer, material, quote
-import services
 
-T = TypeVar('T')  # Placeholder for the specific model type
+from typing import List, Type, TypeVar
+
+from app.models.base import AppBaseModel
+
+C = TypeVar('C', bound=AppBaseModel)  # create
+R = TypeVar('R', bound=AppBaseModel)  # read
 
 
-class BaseBusiness(Generic[T]):
+class BaseBusiness():
 
-    model_name = ''
+    def __init__(self, service_name, read_model: Type[R] | None = None) -> None:
+        self.service_name = service_name
+        self.read_model = read_model
 
-    def create(self, item: T) -> str | None:
-        item_id: str | None = services[self.model_name].create(item)
+    def create(self, item) -> str | None:
+        item_id: str | None = self.service_name.create(item)
         return item_id if item_id is not None else None
 
-    def read_all(self) -> List[T]:
-        items: List[T] = services[self.model_name].read_all()
+    def read_all(self) -> List[R]:
+        items: List = self.service_name.read_all()
         return items
 
-    def read(self, id: str) -> T | None:
-        item: T | None = services[self.model_name].read(id)
+    def read(self, id: str) -> R | None:
+        item: R | None = self.service_name.read(id)
         return item if item is not None else None
 
-    def update(self, id: str, item: T) -> bool | None:
-        if services[self.model_name].update(id, item):
+    def update(self, id: str, item: R) -> bool | None:
+        if self.service_name.update(id, item):
             return True
         return None
 
     def delete(self, id: str):
-        if services[self.model_name].delete(id):
+        if self.service_name.delete(id):
             return True
         return None

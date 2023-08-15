@@ -1,12 +1,8 @@
 
 from datetime import datetime
 from enum import Enum
-from typing import Annotated, List
 
-from bson import ObjectId
-from pydantic import Field
-
-from app.models.base import AppBaseModel, PyObjectId
+from app.models.base import AppBaseModel
 
 
 class JobType(str, Enum):
@@ -16,7 +12,7 @@ class JobType(str, Enum):
 
 
 class QuoteBase(AppBaseModel):
-    id_customer: str | None = None
+    customer_id: str | None = None
     job_address: str | None = None
     type: JobType | None = None
     date: datetime | None = None
@@ -30,17 +26,10 @@ class Quote(QuoteBase):
 
 
 class QuoteCreate(QuoteBase):
-    id_customer: str
+    customer_id: str
     job_address: str
     type: JobType
 
 
 class QuoteUpdate(QuoteBase):
     pass
-
-
-# class QuoteInDB(QuoteBase):
-#     id: Annotated[ObjectId, PyObjectId] = Field(default_factory=ObjectId, alias='_id')
-
-#     class Config:
-#         json_encoders = {ObjectId: str}

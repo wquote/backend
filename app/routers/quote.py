@@ -1,6 +1,6 @@
 
 from typing import List
-from fastapi import APIRouter, Body, HTTPException, Path, Response, status
+from fastapi import APIRouter, HTTPException, status
 
 from app import business
 from app.models.quote import Quote
@@ -14,11 +14,11 @@ router = APIRouter(
 
 
 @router.get('/', status_code=status.HTTP_200_OK, response_model=List[Quote])
-async def read_all(idCustomer: str | None = None) -> List[Quote]:
+async def read_all(type: str | None = None, customerId: str | None = None) -> List[Quote]:
     items: List[Quote] = []
 
-    if idCustomer:
-        items = business.quote.read_by_customer(idCustomer)
+    if customerId:
+        items = business.quote.read_by_customer(customerId)
     else:
         items = business.quote.read_all()
 

@@ -1,9 +1,7 @@
 
-from typing import Annotated
-from bson import ObjectId
 from pydantic import Field
 
-from app.models.base import AppBaseModel, PyObjectId
+from app.models.base import AppBaseModel
 
 
 class MaterialBase(AppBaseModel):
@@ -22,10 +20,3 @@ class MaterialCreate(MaterialBase):
 
 class MaterialUpdate(MaterialBase):
     pass
-
-
-class MaterialInDB(MaterialBase):
-    id: Annotated[ObjectId, PyObjectId] = Field(default_factory=ObjectId, alias='_id')
-
-    class Config:
-        json_encoders = {ObjectId: str}

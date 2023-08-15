@@ -1,4 +1,9 @@
-from app.models.customer import Customer, CustomerCreate, CustomerUpdate
+from app.models.customer import Customer
 from app.services.base import BaseService
 
-customer = BaseService('customers', Customer)
+
+class CustomerService(BaseService):
+    pass
+
+
+customer: CustomerService = CustomerService('customers', Customer)

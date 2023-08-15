@@ -1,14 +1,13 @@
 
-import json
-from typing import Any, Dict, Generic, List, Type, TypeVar, Optional
+from typing import Any, List, Type, TypeVar
 
-import pydantic
-from bson import ObjectId, json_util
-from fastapi.encoders import jsonable_encoder
+from bson import ObjectId
+from bson.errors import InvalidId
 
 from app.database import db
 from app.models.base import AppBaseModel
 from app.utils import decodeObjId
+
 
 R = TypeVar('R', bound=AppBaseModel)  # read
 
@@ -34,12 +33,15 @@ class BaseService():
         return items
 
     def read(self, id: str) -> Any | None:
-        if (item_dict := self.collection.find_one({'_id': ObjectId(id)})):
-            item = self.read_model(**decodeObjId(item_dict)) if self.read_model else None
+        try:
+            if (item_dict := self.collection.find_one({'_id': ObjectId(id)})):
+                item = self.read_model(**decodeObjId(item_dict)) if self.read_model else None
+                return item
 
-            return item
+            return None
 
-        return None
+        except InvalidId:
+            return None
 
     def update(self, id: str, item) -> bool | None:
         item_dict: dict = item.model_dump()

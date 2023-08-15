@@ -3,14 +3,15 @@
 # [X] motor_asyncio for async requests to database.
 #    -> Maybe not.
 # [X] ObjectId
-#    -> Using UUID for id field.
+#    -> Letting MongoDB create document ids, and tranforming them into strings when reading from DB.
 # [ ] criar paginação nos métodos read_all ($skip e $limit)
 
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import (customer, material, quote, deck_quote, deck_board_template)
+from app.routers import (customer, decking_board_template, decking_quote,
+                         material, quote)
 
 app = FastAPI()
 
@@ -35,10 +36,11 @@ async def root():
 
 
 app.include_router(customer.router)
-app.include_router(quote.router)
-app.include_router(deck_quote.router)
 app.include_router(material.router)
-# app.include_router(deck_board_template.router)
+app.include_router(quote.router)
+
+app.include_router(decking_quote.router)
+app.include_router(decking_board_template.router)
 
 
 if __name__ == "__main__":
