@@ -2,19 +2,20 @@ from datetime import datetime
 from typing import List
 
 from app import business, services
-from app.models.decking_board_template import DeckingBoardTemplate
-from app.models.decking_quote import (DeckingBoardSpec,
-                                      DeckingBoardSpecMaterial, DeckingQuote,
-                                      DeckingQuoteCreate, DeckingQuoteUpdate)
+from app.models.base import CatalogItemSpec, CatalogMaterialSpec
+from app.models.decking_board_catalog import DeckingBoardCatalog
+from app.models.decking_quote import (DeckingBoardSpecs, DeckingQuote,
+                                      DeckingQuoteBase, DeckingQuoteCreate,
+                                      DeckingQuoteUpdate)
 from app.utils import randomFloat, randomInt
 
 
 class DeckingQuoteBusiness():
 
     def create(self, item: DeckingQuoteCreate) -> str | None:
-        processed_item = self.process_quote(item)
+        estimated_item = self.estimate(item)
 
-        if (inserted_id := services.decking_quote.create(processed_item)):
+        if (inserted_id := services.decking_quote.create(estimated_item)):
             return inserted_id
 
         return None
@@ -31,7 +32,7 @@ class DeckingQuoteBusiness():
         return None
 
     def update(self, id: str, item: DeckingQuoteUpdate) -> bool | None:
-        processed_deck_quote_dict: dict = self.process_quote(item).model_dump()
+        processed_deck_quote_dict: dict = self.estimate(item).model_dump()
         processed_deck_quote = DeckingQuoteUpdate(**processed_deck_quote_dict)
 
         if (services.decking_quote.update(id, processed_deck_quote)):
@@ -45,63 +46,66 @@ class DeckingQuoteBusiness():
 
         return None
 
-    def process_quote(self, decking_quote: DeckingQuoteCreate | DeckingQuoteUpdate
-                      ) -> DeckingQuoteCreate | DeckingQuoteUpdate:
+    def estimate(self, decking_quote: DeckingQuoteBase) -> DeckingQuoteBase:
 
-        decking_quote.date = datetime.now()
+        decking_quote.updated_at = datetime.now()
+        decking_quote.created_at = decking_quote.updated_at if decking_quote.created_at is None else decking_quote.created_at
 
-        decking_quote.decking_board_specs = self.process_board_specs()
+        obj: dict = {
+            'selected_spec_index': 0,
+            'catalogs_spec': self.process_catalog_specs()
+        }
+        decking_quote.decking_board_specs = DeckingBoardSpecs(**obj)
 
         decking_quote.profit = randomFloat(3000, 5000)
         decking_quote.value = randomFloat(15000, 30000)
 
         return decking_quote
 
-    def process_board_specs(self) -> List[DeckingBoardSpec]:
-        templates: List[DeckingBoardTemplate] = business.decking_board_template.read_all()
+    def process_catalog_specs(self) -> List[CatalogItemSpec]:
+        catalogs: List[DeckingBoardCatalog] = business.decking_board_catalog.read_all()
 
-        # decking_board_specs
-        board_specs: List[DeckingBoardSpec] = []
-        for template in templates:
-            template_name: str | None = template.name
+        # catalogs_spec
+        catalog_specs: List[CatalogItemSpec] = []
+        for catalog in catalogs:
+            catalog_spec_name: str | None = catalog.name
 
-            # decking_board_spec_materials
-            board_spec_materials: List[DeckingBoardSpecMaterial] = []
-            if template.materials:
-                for m in template.materials:
-                    if m.is_default:
-                        material_id: str = m.id
-                        qty: float = randomInt(5, 15)
-                        price_snapshot: float | None = 0.0
-                        desc: str | None = ''
+            # catalog_materials_spec
+            catalog_materials_spec: List[CatalogMaterialSpec] = []
+            for catalog_material in catalog.materials if catalog.materials is not None else []:
+                qty: float | None = 0.0
+                price_snapshot: float | None = 0.0
+                desc: str | None = ''
 
-                        if material := business.material.read(material_id):
-                            price_snapshot = material.price
-                            desc = material.desc
+                if material := business.material.read(catalog_material.id):
+                    price_snapshot = material.price
+                    desc = material.desc
 
-                        obj: dict = {
-                            "desc_snapshot": desc,
-                            "price_snapshot": price_snapshot,
-                            "qty": qty,
-                        }
+                    if catalog_material.is_default:
+                        qty = randomFloat(1, 10)
 
-                        board_spec_materials.append(DeckingBoardSpecMaterial(**obj))
+                obj: dict = {
+                    "desc_snapshot": desc,
+                    "price_snapshot": price_snapshot,
+                    "qty": qty,
+                }
 
-            amount_sum: float = sum(material.price_snapshot * float(material.qty) for material in board_spec_materials)
+                catalog_materials_spec.append(CatalogMaterialSpec(**obj))
+
+            amount_sum: float = sum(material.price_snapshot * float(material.qty) for material in catalog_materials_spec)
             tax: float = 0.0625 * amount_sum
             cost: float = amount_sum + tax
 
             obj = dict(
-                name=template_name,
-                materials=board_spec_materials,
+                name=catalog_spec_name,
+                materials=catalog_materials_spec,
                 tax=tax,
                 cost=cost
             )
 
-            board_spec = DeckingBoardSpec(**obj)
-            board_specs.append(board_spec)
+            catalog_specs.append(CatalogItemSpec(**obj))
 
-        return board_specs
+        return catalog_specs
 
 
 decking_quote = DeckingQuoteBusiness()

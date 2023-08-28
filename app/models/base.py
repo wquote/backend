@@ -2,7 +2,7 @@
 # - https://www.mongodb.com/developer/languages/python/python-quickstart-fastapi/
 # - https://stackoverflow.com/questions/76686267/what-is-the-new-way-to-declare-mongo-objectid-with-pydantic-v2-0
 
-from typing import Any
+from typing import Any, List
 
 from bson import ObjectId
 from pydantic import BaseModel
@@ -19,6 +19,19 @@ class AppBaseModel(BaseModel):
     class Config:
         alias_generator = to_camel_case
         populate_by_name = True
+
+
+class CatalogMaterialSpec(AppBaseModel):
+    desc_snapshot: str = ''
+    price_snapshot: float = 0.0
+    qty: float = 0.0
+
+
+class CatalogItemSpec(AppBaseModel):
+    name: str | None = None
+    materials: List[CatalogMaterialSpec] | None = None
+    tax: float | None = None
+    cost: float | None = None
 
 
 class PyObjectId:

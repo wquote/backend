@@ -7,45 +7,53 @@ quote = {
   profit: 5000,
   value: 25300,
 
-  decking: {
+  decking_info: {
     main_areas: [{
       width: 20,
       height: 10,
       height: 2
     }]
   },
-  
+
   pressure_treated: [],
 
   structural: [],
 
-  board_specs: [
-    {
-      // id_deckboard_template: 11,
-      name: 'Pressure Treated Decking Boards',
-      materials: [
-        {
-          desc_snapshot: 'Pressure Treated Decking Boards',
-          price_snapshot: 10,
-          qty: 14
-        }
-      ],
-      tax: 6.5,
-      cost: 120
-    }
-  ],
+  decking_boards: {
+    selected_index: 0,
+    catalog_specs: []
+  },
 
-  railling_specs: [],
+  railling_specs: {
+    selected_index: 0,
+    catalog_specs: []
+  },
 
   rain_scape_specs: [],
 
-  finishing: [],
+  finishing: {
+    selected_index: 0,
+    catalog_specs: []
+  },
 
   extras: [],
 }
 
+catalog_item_spec = {
+  // id_deckboard_template: 11,
+  name: 'Pressure Treated Decking Boards',
+  catalog_materials_specs: [],
+  tax: 6.5,
+  cost: 120
+}
 
-decking_board_templates = [
+catalog_material_spec = {
+  desc_snapshot: 'Pressure Treated Decking Boards',
+  price_snapshot: 10,
+  qty: 14
+}
+
+decking_board_catalog = [
   {
     id: 11,
     name: 'Pressure Treated Decking Boards',
@@ -84,7 +92,7 @@ decking_board_templates = [
   }
 ]
 
-materials =  [
+materials = [
   {
     id: 1,
     desc: '5/4 x 6 Pressure Treated Decking Boards (Cost by LF)',

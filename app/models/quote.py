@@ -11,14 +11,22 @@ class JobType(str, Enum):
     siding = 'SIDING'
 
 
+class QuoteState(str, Enum):
+    opened = 'OPENED'
+    closed = 'CLOSED'
+
+
 class QuoteBase(AppBaseModel):
     customer_id: str | None = None
     job_address: str | None = None
     type: JobType | None = None
-    date: datetime | None = None
+    notes: str | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    closed_at: datetime | None = None
+    state: QuoteState | None = None
     profit: float | None = None
     value: float | None = None
-    notes: str | None = None
 
 
 class Quote(QuoteBase):
