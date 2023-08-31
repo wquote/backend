@@ -7,6 +7,7 @@ from app import business
 from app.models.material import Material, MaterialCreate, MaterialUpdate
 
 NOT_FOUND_MSG: str = 'Material not found.'
+business_controller = business.material
 
 router = APIRouter(
     prefix='/materials'
@@ -15,7 +16,7 @@ router = APIRouter(
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
 async def create(body: MaterialCreate, response: Response):
-    inserted_id: str | None = business.material.create(body)
+    inserted_id: str | None = business_controller.create(body)
 
     if inserted_id is not None:
         response.headers["Location"] = inserted_id
@@ -23,14 +24,14 @@ async def create(body: MaterialCreate, response: Response):
 
 @router.get('/', status_code=status.HTTP_200_OK, response_model=List[Material])
 async def read_all() -> List[Material]:
-    materials: List[Material] = business.material.read_all()
+    materials: List[Material] = business_controller.read_all()
 
     return materials
 
 
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=Material)
 async def read(id: str):
-    material: Material | None = business.material.read(id)
+    material: Material | None = business_controller.read(id)
     if material is not None:
         return material
 
@@ -39,7 +40,7 @@ async def read(id: str):
 
 @router.put('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def update(id: str, body: MaterialUpdate):
-    if (business.material.update(id, body)):
+    if (business_controller.update(id, body)):
         return None
 
     raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)
@@ -47,7 +48,7 @@ async def update(id: str, body: MaterialUpdate):
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete(id: str):
-    if (business.material.delete(id)):
+    if (business_controller.delete(id)):
         return None
 
     raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)

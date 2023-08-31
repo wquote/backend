@@ -4,19 +4,19 @@ from fastapi import APIRouter
 
 from app import business
 from app.endpoints.base import BaseEndpoint
-from app.models.decking_quote import DeckingQuote, DeckingQuoteCreate, DeckingQuoteUpdate
+from app.models.catalog import Catalog, CatalogCreate, CatalogUpdate
 
-business_controller = business.decking_quote
-TypeRead = DeckingQuote
-TypeCreate = DeckingQuoteCreate
-TypeUpdate = DeckingQuoteUpdate
-item_name = 'Decking Quote'
+business_controller = business.decking_railing_catalog
+TypeRead = Catalog
+TypeCreate = CatalogCreate
+TypeUpdate = CatalogUpdate
+item_name = 'Catalog'
 
 router = APIRouter(
-    prefix='/quotes/decking',
+    prefix='/decking/railing-catalog'
 )
 
-endpoint = BaseEndpoint(business_controller, item_name, DeckingQuote, DeckingQuoteCreate, DeckingQuoteUpdate)
+endpoint = BaseEndpoint(business_controller, item_name, Catalog, CatalogCreate, CatalogUpdate)
 
 
 @router.post('/', response_model=TypeRead | None)

@@ -2,9 +2,9 @@ from datetime import datetime
 from typing import List
 
 from app import business, services
-from app.models.base import CatalogItemSpec, CatalogMaterialSpec
-from app.models.decking_board_catalog import DeckingBoardCatalog
-from app.models.decking_quote import (DeckingBoardSpecs, DeckingQuote,
+from app.models.catalog import CatalogItemSpec, CatalogMaterialSpec, CatalogSpecs
+from app.models.catalog import Catalog
+from app.models.decking_quote import (DeckingQuote,
                                       DeckingQuoteBase, DeckingQuoteCreate,
                                       DeckingQuoteUpdate)
 from app.utils import randomFloat, randomInt
@@ -51,20 +51,33 @@ class DeckingQuoteBusiness():
         decking_quote.updated_at = datetime.now()
         decking_quote.created_at = decking_quote.updated_at if decking_quote.created_at is None else decking_quote.created_at
 
-        obj: dict = {
-            'selected_spec_index': 0,
-            'catalogs_spec': self.process_catalog_specs()
+        selected_spec_index: int = 0
+        obj: dict = {}
+
+        # Decking boards breakdown
+        selected_spec_index = getattr(decking_quote, 'board_specs.selected_spec_index', 0)
+        decking_catalogs: List[Catalog] = business.decking_board_catalog.read_all()
+        obj = {
+            'selected_spec_index': selected_spec_index,
+            'catalogs_spec': self.process_catalog_specs(decking_catalogs)
         }
-        decking_quote.decking_board_specs = DeckingBoardSpecs(**obj)
+        decking_quote.board_specs = CatalogSpecs(**obj)
+
+        # Railing breakdown
+        selected_spec_index = getattr(decking_quote, 'decking_railing_specs.selected_spec_index', 0)
+        railing_catalogs: List[Catalog] = business.decking_railing_catalog.read_all()
+        obj = {
+            'selected_spec_index': selected_spec_index,
+            'catalogs_spec': self.process_catalog_specs(railing_catalogs)
+        }
+        decking_quote.railing_specs = CatalogSpecs(**obj)
 
         decking_quote.profit = randomFloat(3000, 5000)
         decking_quote.value = randomFloat(15000, 30000)
 
         return decking_quote
 
-    def process_catalog_specs(self) -> List[CatalogItemSpec]:
-        catalogs: List[DeckingBoardCatalog] = business.decking_board_catalog.read_all()
-
+    def process_catalog_specs(self, catalogs: List[Catalog]) -> List[CatalogItemSpec]:
         # catalogs_spec
         catalog_specs: List[CatalogItemSpec] = []
         for catalog in catalogs:

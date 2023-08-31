@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.endpoints import (customer, decking_board_catalog, decking_quote,
-                           material, quote)
+                           decking_railing_catalog, material, quote)
 
 app = FastAPI()
 
@@ -41,6 +41,7 @@ app.include_router(quote.router)
 
 app.include_router(decking_quote.router)
 app.include_router(decking_board_catalog.router)
+app.include_router(decking_railing_catalog.router)
 
 
 if __name__ == "__main__":

@@ -1,12 +1,13 @@
 
 from typing import List
+
 from fastapi import APIRouter, HTTPException, status
 
 from app import business
 from app.models.quote import Quote
 
-
 NOT_FOUND_MSG: str = 'Quote not found.'
+business_controller = business.quote
 
 router = APIRouter(
     prefix='/quotes'
@@ -18,16 +19,16 @@ async def read_all(type: str | None = None, customerId: str | None = None) -> Li
     items: List[Quote] = []
 
     if customerId:
-        items = business.quote.read_by_customer(customerId)
+        items = business_controller.read_by_customer(customerId)
     else:
-        items = business.quote.read_all()
+        items = business_controller.read_all()
 
     return items
 
 
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=Quote)
 async def read(id: str):
-    item: Quote | None = business.quote.read(id)
+    item: Quote | None = business_controller.read(id)
     if item is not None:
         return item
 
