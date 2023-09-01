@@ -28,12 +28,12 @@ class DeckingInfo(AppBaseModel):
 
 class DeckingQuoteBase(QuoteBase):
     decking_info: DeckingInfo | None = None
-    pressure_treated: List[Any] | None = None
-    structural: List[Any] | None = None
+    pressure_treated_specs: CatalogSpecs | None = None
+    structural_specs: CatalogSpecs | None = None
     board_specs: CatalogSpecs | None = None
     railing_specs: CatalogSpecs | None = None
     rain_scape_specs: CatalogSpecs | None = None
-    finishing: List[Any] | None = None
+    finishing_specs: CatalogSpecs | None = None
     extras: List[Any] | None = None
 
 

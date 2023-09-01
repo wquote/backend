@@ -6,14 +6,14 @@ from app import business
 from app.endpoints.base import BaseEndpoint
 from app.models.catalog import Catalog, CatalogCreate, CatalogUpdate
 
-business_controller = business.decking_railing_catalog
+business_controller = business.decking_catalog_railing
 TypeRead = Catalog
 TypeCreate = CatalogCreate
 TypeUpdate = CatalogUpdate
-item_name = 'Catalog'
+item_name = 'Decking Railing catalog'
 
 router = APIRouter(
-    prefix='/decking/railing-catalog'
+    prefix='/decking/catalogs/railing'
 )
 
 endpoint = BaseEndpoint(business_controller, item_name, Catalog, CatalogCreate, CatalogUpdate)

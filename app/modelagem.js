@@ -53,7 +53,7 @@ catalog_material_spec = {
   qty: 14
 }
 
-decking_board_catalog = [
+decking_catalog_board = [
   {
     id: 11,
     name: 'Pressure Treated Decking Boards',

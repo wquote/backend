@@ -3,5 +3,9 @@ from .material import material
 from .quote import quote
 
 from .decking_quote import decking_quote
-from .decking_board_catalog import decking_board_catalog
-from .decking_railing_catalog import decking_railing_catalog
+from .decking_catalog_board import decking_catalog_board
+from .decking_catalog_railing import decking_catalog_railing
+from .decking_catalog_pt_frame import decking_catalog_pt_frame
+from .decking_catalog_structural import decking_catalog_structural
+from .decking_catalog_finishing import decking_catalog_finishing
+from .decking_catalog_rain_scape import decking_catalog_rain_scape

@@ -10,8 +10,11 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.endpoints import (customer, decking_board_catalog, decking_quote,
-                           decking_railing_catalog, material, quote)
+from app.endpoints import (customer, decking_catalog_board,
+                           decking_catalog_finishing, decking_catalog_pt_frame,
+                           decking_catalog_railing, decking_catalog_rain_scape,
+                           decking_catalog_structural, decking_quote, material,
+                           quote)
 
 app = FastAPI()
 
@@ -40,8 +43,12 @@ app.include_router(material.router)
 app.include_router(quote.router)
 
 app.include_router(decking_quote.router)
-app.include_router(decking_board_catalog.router)
-app.include_router(decking_railing_catalog.router)
+app.include_router(decking_catalog_board.router)
+app.include_router(decking_catalog_railing.router)
+app.include_router(decking_catalog_pt_frame.router)
+app.include_router(decking_catalog_structural.router)
+app.include_router(decking_catalog_finishing.router)
+app.include_router(decking_catalog_rain_scape.router)
 
 
 if __name__ == "__main__":

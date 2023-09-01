@@ -7,4 +7,4 @@ class DeckingRailingCatalog(BaseBusiness):
     pass
 
 
-decking_railing_catalog = DeckingRailingCatalog(services.decking_railing_catalog)
+decking_catalog_railing = DeckingRailingCatalog(services.decking_catalog_railing)
