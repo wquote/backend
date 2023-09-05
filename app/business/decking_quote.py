@@ -56,7 +56,7 @@ class DeckingQuoteBusiness():
         catalogs: List[Catalog] = []
 
         # Boards breakdown
-        selected_spec_index = getattr(decking_quote, 'board_specs.selected_spec_index', 0)
+        selected_spec_index = getattr(decking_quote.board_specs, 'selected_spec_index', 0)
         catalogs = business.decking_catalog_board.read_all()
         obj = {
             'selected_spec_index': selected_spec_index,
@@ -65,7 +65,7 @@ class DeckingQuoteBusiness():
         decking_quote.board_specs = CatalogSpecs(**obj)
 
         # Railing breakdown
-        selected_spec_index = getattr(decking_quote, 'railing_specs.selected_spec_index', 0)
+        selected_spec_index = getattr(decking_quote.railing_specs, 'selected_spec_index', 0)
         catalogs = business.decking_catalog_railing.read_all()
         obj = {
             'selected_spec_index': selected_spec_index,
@@ -74,7 +74,7 @@ class DeckingQuoteBusiness():
         decking_quote.railing_specs = CatalogSpecs(**obj)
 
         # PT Frame
-        selected_spec_index = getattr(decking_quote, 'pressure_treated_specs.selected_spec_index', 0)
+        selected_spec_index = getattr(decking_quote.pressure_treated_specs, 'selected_spec_index', 0)
         catalogs = business.decking_catalog_pt_frame.read_all()
         obj = {
             'selected_spec_index': selected_spec_index,
@@ -83,7 +83,7 @@ class DeckingQuoteBusiness():
         decking_quote.pressure_treated_specs = CatalogSpecs(**obj)
 
         # Structural
-        selected_spec_index = getattr(decking_quote, 'structural_specs.selected_spec_index', 0)
+        selected_spec_index = getattr(decking_quote.structural_specs, 'selected_spec_index', 0)
         catalogs = business.decking_catalog_structural.read_all()
         obj = {
             'selected_spec_index': selected_spec_index,
@@ -92,7 +92,7 @@ class DeckingQuoteBusiness():
         decking_quote.structural_specs = CatalogSpecs(**obj)
 
         # Finishing
-        selected_spec_index = getattr(decking_quote, 'finishing_specs.selected_spec_index', 0)
+        selected_spec_index = getattr(decking_quote.finishing_specs, 'selected_spec_index', 0)
         catalogs = business.decking_catalog_finishing.read_all()
         obj = {
             'selected_spec_index': selected_spec_index,
@@ -101,7 +101,7 @@ class DeckingQuoteBusiness():
         decking_quote.finishing_specs = CatalogSpecs(**obj)
 
         # Rain Scape
-        selected_spec_index = getattr(decking_quote, 'rain_scape_specs.selected_spec_index', 0)
+        selected_spec_index = getattr(decking_quote.rain_scape_specs, 'selected_spec_index', 0)
         catalogs = business.decking_catalog_rain_scape.read_all()
         obj = {
             'selected_spec_index': selected_spec_index,
