@@ -1,24 +1,23 @@
 
-from typing import List
+from typing import Any, List
 
-from bson import ObjectId
-
-from app.database import db
-from app.models.quote import Quote
-from app.services.base import BaseService
-from app.utils import decodeObjId
+from app import repositories
+from app.services.base import BaseBusiness
+from app.models.quote import Quote, QuoteCreate
 
 
-collection = db['quotes']
+class QuoteBusiness(BaseBusiness):
 
-
-class QuoteService(BaseService):
+    def create(self, item: QuoteCreate) -> str | None:
+        pass
 
     def read_by_customer(self, customer_id: str) -> List[Quote]:
-        items_list: List[dict] = list(collection.find({'customer_id': customer_id}))
-        items: List = [Quote(**decodeObjId(i)) for i in items_list]
+        items: List[Quote] = repositories.quote.read_by_customer(customer_id)
 
         return items
 
+    def update(self, id: str, item: Any) -> None:
+        pass
 
-quote = QuoteService('quotes', Quote)
+
+quote = QuoteBusiness(repositories.quote)

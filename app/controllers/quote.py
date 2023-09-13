@@ -3,11 +3,11 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException, status
 
-from app import business
+from app import services
 from app.models.quote import Quote
 
 NOT_FOUND_MSG: str = 'Quote not found.'
-business_controller = business.quote
+business_controller = services.quote
 
 router = APIRouter(
     prefix='/quotes'
@@ -37,7 +37,7 @@ async def read(id: str):
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete(id: str):
-    if (business.quote.delete(id)):
+    if (services.quote.delete(id)):
         return None
 
     raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)

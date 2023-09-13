@@ -1,57 +1,36 @@
 
-from typing import Any, List, Type, TypeVar
+from typing import List, Type, TypeVar
 
-from bson import ObjectId
-from bson.errors import InvalidId
-
-from app.database import db
 from app.models.base import AppBaseModel
-from app.utils import decodeObjId
 
-
+C = TypeVar('C', bound=AppBaseModel)  # create
 R = TypeVar('R', bound=AppBaseModel)  # read
 
 
-class BaseService():
+class BaseBusiness():
 
-    def __init__(self, collection: str, read_model: Type[R] | None = None) -> None:
-        self.collection = db[collection]
+    def __init__(self, service_name, read_model: Type[R] | None = None) -> None:
+        self.service_name = service_name
         self.read_model = read_model
 
     def create(self, item) -> str | None:
-        item_dict: dict = item.model_dump()
+        item_id: str | None = self.service_name.create(item)
+        return item_id if item_id is not None else None
 
-        if (result := self.collection.insert_one(item_dict)):
-            return str(result.inserted_id)
-
-        return None
-
-    def read_all(self) -> List:
-        items_list: List[dict] = list(self.collection.find())
-        items: List = [self.read_model(**decodeObjId(i)) for i in items_list if self.read_model]
-
+    def read_all(self) -> List[R]:
+        items: List = self.service_name.read_all()
         return items
 
-    def read(self, id: str) -> Any | None:
-        try:
-            if (item_dict := self.collection.find_one({'_id': ObjectId(id)})):
-                item = self.read_model(**decodeObjId(item_dict)) if self.read_model else None
-                return item
+    def read(self, id: str) -> R | None:
+        item: R | None = self.service_name.read(id)
+        return item if item is not None else None
 
-            return None
-
-        except InvalidId:
-            return None
-
-    def update(self, id: str, item) -> bool | None:
-        item_dict: dict = item.model_dump()
-        if (self.collection.update_one({'_id': ObjectId(id)}, {'$set': item_dict})):
+    def update(self, id: str, item: R) -> bool | None:
+        if self.service_name.update(id, item):
             return True
-
         return None
 
-    def delete(self, id: str) -> bool | None:
-        if (self.collection.delete_one({'_id': ObjectId(id)})):
+    def delete(self, id: str):
+        if self.service_name.delete(id):
             return True
-
         return None

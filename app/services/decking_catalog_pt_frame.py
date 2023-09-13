@@ -1,7 +1,10 @@
 
-from app.models.catalog import Catalog
-from app.services.base import BaseService
+from app import repositories
+from app.services.base import BaseBusiness
 
-collection = 'decking_pt_frame_catalogs'
 
-decking_catalog_pt_frame = BaseService(collection, Catalog)
+class DeckingPTFrameCatalog(BaseBusiness):
+    pass
+
+
+decking_catalog_pt_frame = DeckingPTFrameCatalog(repositories.decking_catalog_pt_frame)

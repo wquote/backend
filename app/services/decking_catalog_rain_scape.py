@@ -1,7 +1,5 @@
 
-from app.models.catalog import Catalog
-from app.services.base import BaseService
+from app import repositories
+from app.services.base import BaseBusiness
 
-collection = 'decking_rain_scape_catalogs'
-
-decking_catalog_rain_scape = BaseService(collection, Catalog)
+decking_catalog_rain_scape = BaseBusiness(repositories.decking_catalog_rain_scape)

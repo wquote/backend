@@ -10,7 +10,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.endpoints import (customer, decking_catalog_board,
+from app.controllers import (customer, decking_catalog_board,
                            decking_catalog_finishing, decking_catalog_pt_frame,
                            decking_catalog_railing, decking_catalog_rain_scape,
                            decking_catalog_structural, decking_quote, material,

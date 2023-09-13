@@ -1,9 +1,10 @@
-from app.models.customer import Customer
-from app.services.base import BaseService
+
+from app import repositories
+from app.services.base import BaseBusiness
 
 
-class CustomerService(BaseService):
+class CustomerBusiness(BaseBusiness):
     pass
 
 
-customer: CustomerService = CustomerService('customers', Customer)
+customer = CustomerBusiness(repositories.customer)

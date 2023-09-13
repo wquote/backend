@@ -2,18 +2,18 @@
 from typing import List
 from fastapi import APIRouter
 
-from app import business
-from app.endpoints.base import BaseEndpoint
+from app import services
+from app.controllers.base import BaseEndpoint
 from app.models.catalog import Catalog, CatalogCreate, CatalogUpdate
 
-business_controller = business.decking_catalog_board
+business_controller = services.decking_catalog_structural
 TypeRead = Catalog
 TypeCreate = CatalogCreate
 TypeUpdate = CatalogUpdate
-item_name = 'Decking Board catalog'
+item_name = 'Decking Structural catalog'
 
 router = APIRouter(
-    prefix='/decking/catalogs/board',
+    prefix='/decking/catalogs/structural',
 )
 
 endpoint = BaseEndpoint(business_controller, item_name, Catalog, CatalogCreate, CatalogUpdate)

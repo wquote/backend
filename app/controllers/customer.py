@@ -2,21 +2,21 @@
 from typing import List
 from fastapi import APIRouter
 
-from app import business
-from app.endpoints.base import BaseEndpoint
-from app.models.catalog import Catalog, CatalogCreate, CatalogUpdate
+from app import services
+from app.controllers.base import BaseEndpoint
+from app.models.customer import Customer, CustomerCreate, CustomerUpdate
 
-business_controller = business.decking_catalog_pt_frame
-TypeRead = Catalog
-TypeCreate = CatalogCreate
-TypeUpdate = CatalogUpdate
-item_name = 'Decking PT Frame catalog'
+business_controller = services.customer
+TypeRead = Customer
+TypeCreate = CustomerCreate
+TypeUpdate = CustomerUpdate
+item_name = 'Customer'
 
 router = APIRouter(
-    prefix='/decking/catalogs/pt-frame',
+    prefix='/customers'
 )
 
-endpoint = BaseEndpoint(business_controller, item_name, Catalog, CatalogCreate, CatalogUpdate)
+endpoint = BaseEndpoint(business_controller, item_name, Customer, CustomerCreate, CustomerUpdate)
 
 
 @router.post('/', response_model=TypeRead | None)

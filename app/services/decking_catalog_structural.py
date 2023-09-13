@@ -1,7 +1,5 @@
 
-from app.models.catalog import Catalog
-from app.services.base import BaseService
+from app import repositories
+from app.services.base import BaseBusiness
 
-collection = 'decking_structural_catalogs'
-
-decking_catalog_structural = BaseService(collection, Catalog)
+decking_catalog_structural = BaseBusiness(repositories.decking_catalog_structural)
