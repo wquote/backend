@@ -1,4 +1,8 @@
+
 from app.models.material import Material
 from app.repositories.base import BaseRepository
 
-material: BaseRepository = BaseRepository('materials', Material)
+collection = 'materials'
+entity = Material
+
+material: BaseRepository = BaseRepository(collection, entity)

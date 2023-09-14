@@ -1,13 +1,11 @@
 
-from typing import Any, List, Type, TypeVar
+from typing import Any, List
 
 from bson import ObjectId
-from bson.errors import InvalidId
 from fastapi import HTTPException
 from pymongo.results import DeleteResult, InsertOneResult, UpdateResult
 
 from app.database import db
-from app.models.base import AppBaseModel
 from app.utils import decodeObjId
 
 
