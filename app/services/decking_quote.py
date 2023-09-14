@@ -7,10 +7,11 @@ from app.models.catalog import Catalog
 from app.models.decking_quote import (DeckingQuote,
                                       DeckingQuoteBase, DeckingQuoteCreate,
                                       DeckingQuoteUpdate)
-from app.utils import randomFloat, randomInt
+from app.services.base import BaseService
+from app.utils import randomFloat
 
 
-class DeckingQuoteBusiness():
+class DeckingQuoteService(BaseService):
 
     def create(self, item: DeckingQuoteCreate) -> str | None:
         estimated_item = self.estimate(item)
@@ -20,31 +21,14 @@ class DeckingQuoteBusiness():
 
         return None
 
-    def read_all(self) -> List[DeckingQuote]:
-        deck_quotes: List[DeckingQuote] = repositories.decking_quote.read_all()
-
-        return deck_quotes
-
-    def read(self, id: str) -> DeckingQuote | None:
-        if (decking_quote := repositories.decking_quote.read(id)) is not None:
-            return decking_quote
-
-        return None
-
-    def update(self, id: str, item: DeckingQuoteUpdate) -> bool | None:
+    def update(self, id: str, item: DeckingQuoteUpdate) -> bool:
         processed_deck_quote_dict: dict = self.estimate(item).model_dump()
         processed_deck_quote = DeckingQuoteUpdate(**processed_deck_quote_dict)
 
         if (repositories.decking_quote.update(id, processed_deck_quote)):
             return True
 
-        return None
-
-    def delete(self, id: str):
-        if (repositories.decking_quote.delete(id)):
-            return True
-
-        return None
+        return False
 
     def estimate(self, decking_quote: DeckingQuoteBase) -> DeckingQuoteBase:
 
@@ -57,57 +41,81 @@ class DeckingQuoteBusiness():
 
         # Boards breakdown
         selected_spec_index = getattr(decking_quote.board_specs, 'selected_spec_index', 0)
-        catalogs = services.decking_catalog_board.read_all()
-        obj = {
-            'selected_spec_index': selected_spec_index,
-            'catalogs_spec': self.process_catalog_specs(catalogs)
-        }
-        decking_quote.board_specs = CatalogSpecs(**obj)
+        # Check if decking_quote.board_specs.catalogs_spec exists
+        catalogs_exists = getattr(decking_quote.board_specs, 'catalogs_spec', None)
+        # If not, create a board specs catalog
+        if not catalogs_exists:
+            catalogs = services.decking_catalog_board.read_all()
+            obj = {
+                'selected_spec_index': selected_spec_index,
+                'catalogs_spec': self.process_catalog_specs(catalogs)
+            }
+            decking_quote.board_specs = CatalogSpecs(**obj)
 
         # Railing breakdown
         selected_spec_index = getattr(decking_quote.railing_specs, 'selected_spec_index', 0)
-        catalogs = services.decking_catalog_railing.read_all()
-        obj = {
-            'selected_spec_index': selected_spec_index,
-            'catalogs_spec': self.process_catalog_specs(catalogs)
-        }
-        decking_quote.railing_specs = CatalogSpecs(**obj)
+        # Check if decking_quote.railing_specs.catalogs_spec exists
+        catalogs_exists = getattr(decking_quote.railing_specs, 'catalogs_spec', None)
+        # If not, create a railing specs catalog
+        if not catalogs_exists:
+            catalogs = services.decking_catalog_railing.read_all()
+            obj = {
+                'selected_spec_index': selected_spec_index,
+                'catalogs_spec': self.process_catalog_specs(catalogs)
+            }
+            decking_quote.railing_specs = CatalogSpecs(**obj)
 
         # PT Frame
         selected_spec_index = getattr(decking_quote.pressure_treated_specs, 'selected_spec_index', 0)
-        catalogs = services.decking_catalog_pt_frame.read_all()
-        obj = {
-            'selected_spec_index': selected_spec_index,
-            'catalogs_spec': self.process_catalog_specs(catalogs)
-        }
-        decking_quote.pressure_treated_specs = CatalogSpecs(**obj)
+        # Check if decking_quote.pressure_treated_specs.catalogs_spec exists
+        catalogs_exists = getattr(decking_quote.pressure_treated_specs, 'catalogs_spec', None)
+        # If not, create a pressure treated specs catalog
+        if not catalogs_exists:
+            catalogs = services.decking_catalog_pt_frame.read_all()
+            obj = {
+                'selected_spec_index': selected_spec_index,
+                'catalogs_spec': self.process_catalog_specs(catalogs)
+            }
+            decking_quote.pressure_treated_specs = CatalogSpecs(**obj)
 
         # Structural
         selected_spec_index = getattr(decking_quote.structural_specs, 'selected_spec_index', 0)
-        catalogs = services.decking_catalog_structural.read_all()
-        obj = {
-            'selected_spec_index': selected_spec_index,
-            'catalogs_spec': self.process_catalog_specs(catalogs)
-        }
-        decking_quote.structural_specs = CatalogSpecs(**obj)
+        # Check if decking_quote.structural_specs.catalogs_spec exists
+        catalogs_exists = getattr(decking_quote.structural_specs, 'catalogs_spec', None)
+        # If not, create a structural specs catalog
+        if not catalogs_exists:
+            catalogs = services.decking_catalog_structural.read_all()
+            obj = {
+                'selected_spec_index': selected_spec_index,
+                'catalogs_spec': self.process_catalog_specs(catalogs)
+            }
+            decking_quote.structural_specs = CatalogSpecs(**obj)
 
         # Finishing
         selected_spec_index = getattr(decking_quote.finishing_specs, 'selected_spec_index', 0)
-        catalogs = services.decking_catalog_finishing.read_all()
-        obj = {
-            'selected_spec_index': selected_spec_index,
-            'catalogs_spec': self.process_catalog_specs(catalogs)
-        }
-        decking_quote.finishing_specs = CatalogSpecs(**obj)
+        # Check if decking_quote.finishing_specs.catalogs_spec exists
+        catalogs_exists = getattr(decking_quote.finishing_specs, 'catalogs_spec', None)
+        # If not, create a finishing specs catalog
+        if not catalogs_exists:
+            catalogs = services.decking_catalog_finishing.read_all()
+            obj = {
+                'selected_spec_index': selected_spec_index,
+                'catalogs_spec': self.process_catalog_specs(catalogs)
+            }
+            decking_quote.finishing_specs = CatalogSpecs(**obj)
 
         # Rain Scape
         selected_spec_index = getattr(decking_quote.rain_scape_specs, 'selected_spec_index', 0)
-        catalogs = services.decking_catalog_rain_scape.read_all()
-        obj = {
-            'selected_spec_index': selected_spec_index,
-            'catalogs_spec': self.process_catalog_specs(catalogs)
-        }
-        decking_quote.rain_scape_specs = CatalogSpecs(**obj)
+        # Check if decking_quote.rain_scape_specs.catalogs_spec exists
+        catalogs_exists = getattr(decking_quote.rain_scape_specs, 'catalogs_spec', None)
+        # If not, create a rain scape specs catalog
+        if not catalogs_exists:
+            catalogs = services.decking_catalog_rain_scape.read_all()
+            obj = {
+                'selected_spec_index': selected_spec_index,
+                'catalogs_spec': self.process_catalog_specs(catalogs)
+            }
+            decking_quote.rain_scape_specs = CatalogSpecs(**obj)
 
         decking_quote.profit = randomFloat(3000, 5000)
         decking_quote.value = randomFloat(15000, 30000)
@@ -122,7 +130,7 @@ class DeckingQuoteBusiness():
 
             # catalog_materials_spec
             catalog_materials_spec: List[CatalogMaterialSpec] = []
-            for catalog_material in catalog.materials if catalog.materials is not None else []:
+            for catalog_material in catalog.materials if catalog.materials else []:
                 qty: float | None = 0.0
                 price_snapshot: float | None = 0.0
                 desc: str | None = ''
@@ -158,4 +166,4 @@ class DeckingQuoteBusiness():
         return catalog_specs
 
 
-decking_quote = DeckingQuoteBusiness()
+decking_quote = DeckingQuoteService(repositories.decking_quote)
