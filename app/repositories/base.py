@@ -10,11 +10,16 @@ from app.utils import decodeObjId
 
 
 def raise_error(e: Exception) -> str:
-    raise HTTPException(status_code=500, detail='Validation Error: ' + str(e))
+    print(f'Error: {e}')
+    raise HTTPException(status_code=500, detail='Error: ' + str(e))
 
 
 def raise_not_found(item_name: str) -> str:
     raise HTTPException(status_code=404, detail=item_name + ' not found.')
+
+
+def raise_not_created(item_name: str) -> str:
+    raise HTTPException(status_code=422, detail=item_name + ' not created.')
 
 
 class BaseRepository():
@@ -50,6 +55,8 @@ class BaseRepository():
             if item_dict := self.collection.find_one({'_id': ObjectId(id)}):
                 item = self.entity(**decodeObjId(item_dict))
                 return item
+            else:
+                raise_not_found(self.entity.__name__)
 
         except Exception as e:
             raise_error(e)
@@ -62,6 +69,8 @@ class BaseRepository():
             result: UpdateResult = self.collection.update_one({'_id': ObjectId(id)}, {'$set': item_dict})
             if (result.matched_count == 1):
                 return True
+            else:
+                raise_not_found(self.entity.__name__)
 
         except Exception as e:
             raise_error(e)
@@ -73,6 +82,8 @@ class BaseRepository():
             result: DeleteResult = self.collection.delete_one({'_id': ObjectId(id)})
             if (result.deleted_count == 1):
                 return True
+            else:
+                raise_not_found(self.entity.__name__)
 
         except Exception as e:
             raise_error(e)
