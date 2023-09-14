@@ -1,9 +1,7 @@
 from app.models.customer import Customer
-from app.repositories.base import BaseService
+from app.repositories.base import BaseRepository
 
+collection: str = 'customers'
+entity = Customer
 
-class CustomerService(BaseService):
-    pass
-
-
-customer: CustomerService = CustomerService('customers', Customer)
+customer = BaseRepository(collection, entity)

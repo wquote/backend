@@ -1,4 +1,4 @@
 from app.models.material import Material
-from app.repositories.base import BaseService
+from app.repositories.base import BaseRepository
 
-material: BaseService = BaseService('materials', Material)
+material: BaseRepository = BaseRepository('materials', Material)

@@ -1,12 +1,12 @@
 
 from typing import List
-from fastapi import APIRouter
+from fastapi import APIRouter, status
 
 from app import services
-from app.controllers.base import BaseEndpoint
+from app.controllers.base import BaseController
 from app.models.catalog import Catalog, CatalogCreate, CatalogUpdate
 
-business_controller = services.decking_catalog_structural
+service = services.decking_catalog_structural
 TypeRead = Catalog
 TypeCreate = CatalogCreate
 TypeUpdate = CatalogUpdate
@@ -16,31 +16,31 @@ router = APIRouter(
     prefix='/decking/catalogs/structural',
 )
 
-endpoint = BaseEndpoint(business_controller, item_name, Catalog, CatalogCreate, CatalogUpdate)
+controller = BaseController(service, item_name, TypeRead, TypeCreate, TypeUpdate)
 
 
-@router.post('/', response_model=TypeRead | None)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=TypeRead | None)
 def create(body: TypeCreate):
-    return endpoint.create(body)
+    return controller.create(body)
 
 
-@router.get('/', response_model=List[TypeRead])
+@router.get('/', status_code=status.HTTP_200_OK, response_model=List[TypeRead])
 def read_all() -> List[TypeRead] | None:
-    items: List[TypeRead] | None = endpoint.read_all()
+    items: List[TypeRead] | None = controller.read_all()
     return items
 
 
-@router.get('/{id}', response_model=TypeRead)
+@router.get('/{id}', status_code=status.HTTP_200_OK, response_model=TypeRead)
 def read(id: str):
-    item: TypeRead | None = endpoint.read(id)
+    item: TypeRead | None = controller.read(id)
     return item
 
 
-@router.put('/{id}')
+@router.put('/{id}', status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 def update(id: str, body: TypeUpdate):
-    return endpoint.update(id, body)
+    return controller.update(id, body)
 
 
-@router.delete('/{id}')
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 def delete(id: str):
-    return endpoint.delete(id)
+    return controller.delete(id)

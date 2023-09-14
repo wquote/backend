@@ -1,10 +1,11 @@
 
 from app import repositories
-from app.services.base import BaseBusiness
+from app.services.base import BaseService
 
 
-class MaterialBusiness(BaseBusiness):
-    pass
+class MaterialService(BaseService):
+    def __init__(self, repository):
+        super().__init__(repository)
 
 
-material = MaterialBusiness(repositories.material)
+material = MaterialService(repositories.material)

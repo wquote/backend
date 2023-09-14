@@ -1,7 +1,7 @@
 
 from app.models.catalog import Catalog
-from app.repositories.base import BaseService
+from app.repositories.base import BaseRepository
 
 collection = 'decking_finishing_catalogs'
 
-decking_catalog_finishing = BaseService(collection, Catalog)
+decking_catalog_finishing = BaseRepository(collection, Catalog)

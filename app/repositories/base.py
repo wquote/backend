@@ -3,55 +3,78 @@ from typing import Any, List, Type, TypeVar
 
 from bson import ObjectId
 from bson.errors import InvalidId
+from fastapi import HTTPException
+from pymongo.results import DeleteResult, UpdateResult, InsertOneResult
 
 from app.database import db
 from app.models.base import AppBaseModel
 from app.utils import decodeObjId
 
-
 R = TypeVar('R', bound=AppBaseModel)  # read
 
 
-class BaseService():
+def raise_error(e: Exception) -> str:
+    raise HTTPException(status_code=500, detail='Validation Error: ' + str(e))
 
-    def __init__(self, collection: str, read_model: Type[R] | None = None) -> None:
+
+class BaseRepository():
+
+    def __init__(self, collection: str, read_model: Type[R]) -> None:
         self.collection = db[collection]
         self.read_model = read_model
 
     def create(self, item) -> str | None:
-        item_dict: dict = item.model_dump()
+        try:
+            item_dict: dict = item.model_dump()
+            result: InsertOneResult = self.collection.insert_one(item_dict)
+            if (result.inserted_id):
+                return str(result.inserted_id)
 
-        if (result := self.collection.insert_one(item_dict)):
-            return str(result.inserted_id)
+        except Exception as e:
+            raise_error(e)
 
         return None
 
-    def read_all(self) -> List:
-        items_list: List[dict] = list(self.collection.find())
-        items: List = [self.read_model(**decodeObjId(i)) for i in items_list if self.read_model]
+    def read_all(self) -> List[R]:
+        try:
+            items_list: List[dict] = list(self.collection.find())
+            items: List[R] = [self.read_model(**decodeObjId(i)) for i in items_list]
+
+        except Exception as e:
+            raise_error(e)
 
         return items
 
-    def read(self, id: str) -> Any | None:
+    def read(self, id: str) -> R | None:
         try:
-            if (item_dict := self.collection.find_one({'_id': ObjectId(id)})):
-                item = self.read_model(**decodeObjId(item_dict)) if self.read_model else None
+            if item_dict := self.collection.find_one({'_id': ObjectId(id)}):
+                item: R = self.read_model(**decodeObjId(item_dict))
                 return item
 
-            return None
-
-        except InvalidId:
-            return None
-
-    def update(self, id: str, item) -> bool | None:
-        item_dict: dict = item.model_dump()
-        if (self.collection.update_one({'_id': ObjectId(id)}, {'$set': item_dict})):
-            return True
+        except Exception as e:
+            raise_error(e)
 
         return None
 
-    def delete(self, id: str) -> bool | None:
-        if (self.collection.delete_one({'_id': ObjectId(id)})):
-            return True
+    def update(self, id: str, item) -> bool:
+        try:
+            item_dict: dict = item.model_dump()
+            result: UpdateResult = self.collection.update_one({'_id': ObjectId(id)}, {'$set': item_dict})
+            if (result.matched_count == 1):
+                return True
 
-        return None
+        except Exception as e:
+            raise_error(e)
+
+        return False
+
+    def delete(self, id: str) -> bool:
+        try:
+            result: DeleteResult = self.collection.delete_one({'_id': ObjectId(id)})
+            if (result.deleted_count == 1):
+                return True
+
+        except Exception as e:
+            raise_error(e)
+
+        return False

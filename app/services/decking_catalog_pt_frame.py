@@ -1,10 +1,11 @@
 
 from app import repositories
-from app.services.base import BaseBusiness
+from app.services.base import BaseService
 
 
-class DeckingPTFrameCatalog(BaseBusiness):
-    pass
+class DeckingPTFrameCatalogService(BaseService):
+    def __init__(self, repository):
+        super().__init__(repository)
 
 
-decking_catalog_pt_frame = DeckingPTFrameCatalog(repositories.decking_catalog_pt_frame)
+decking_catalog_pt_frame = DeckingPTFrameCatalogService(repositories.decking_catalog_pt_frame)

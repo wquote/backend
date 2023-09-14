@@ -1,5 +1,11 @@
 
 from app import repositories
-from app.services.base import BaseBusiness
+from app.services.base import BaseService
 
-decking_catalog_structural = BaseBusiness(repositories.decking_catalog_structural)
+
+class DeckingCatalogStructuralService(BaseService):
+    def __init__(self, repository):
+        super().__init__(repository)
+
+
+decking_catalog_structural = DeckingCatalogStructuralService(repositories.decking_catalog_structural)

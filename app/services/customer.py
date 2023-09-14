@@ -1,10 +1,11 @@
 
 from app import repositories
-from app.services.base import BaseBusiness
+from app.services.base import BaseService
 
 
-class CustomerBusiness(BaseBusiness):
-    pass
+class CustomerService(BaseService):
+    def __init__(self, repository):
+        super().__init__(repository)
 
 
-customer = CustomerBusiness(repositories.customer)
+customer = CustomerService(repositories.customer)

@@ -1,5 +1,11 @@
 
 from app import repositories
-from app.services.base import BaseBusiness
+from app.services.base import BaseService
 
-decking_catalog_rain_scape = BaseBusiness(repositories.decking_catalog_rain_scape)
+
+class DeckingCatalogRainScapeService(BaseService):
+    def __init__(self, repository):
+        super().__init__(repository)
+
+
+decking_catalog_rain_scape = DeckingCatalogRainScapeService(repositories.decking_catalog_rain_scape)

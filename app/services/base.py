@@ -7,30 +7,29 @@ C = TypeVar('C', bound=AppBaseModel)  # create
 R = TypeVar('R', bound=AppBaseModel)  # read
 
 
-class BaseBusiness():
+class BaseService():
 
-    def __init__(self, service_name, read_model: Type[R] | None = None) -> None:
-        self.service_name = service_name
-        self.read_model = read_model
+    def __init__(self, repository) -> None:
+        self.repository = repository
 
     def create(self, item) -> str | None:
-        item_id: str | None = self.service_name.create(item)
-        return item_id if item_id is not None else None
+        item_id: str | None = self.repository.create(item)
+        return item_id if item_id else None
 
     def read_all(self) -> List[R]:
-        items: List = self.service_name.read_all()
+        items: List[R] = self.repository.read_all()
         return items
 
     def read(self, id: str) -> R | None:
-        item: R | None = self.service_name.read(id)
-        return item if item is not None else None
+        item: R | None = self.repository.read(id)
+        return item if item else None
 
-    def update(self, id: str, item: R) -> bool | None:
-        if self.service_name.update(id, item):
+    def update(self, id: str, item) -> bool:
+        if self.repository.update(id, item):
             return True
-        return None
+        return False
 
-    def delete(self, id: str):
-        if self.service_name.delete(id):
+    def delete(self, id: str) -> bool:
+        if self.repository.delete(id):
             return True
-        return None
+        return False
