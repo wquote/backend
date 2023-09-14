@@ -33,96 +33,34 @@ class DeckingQuoteService(BaseService):
     def estimate(self, decking_quote: DeckingQuoteBase) -> DeckingQuoteBase:
 
         decking_quote.updated_at = datetime.now()
-        decking_quote.created_at = decking_quote.updated_at if decking_quote.created_at is None else decking_quote.created_at
+        if decking_quote.created_at is None:
+            decking_quote.created_at = decking_quote.updated_at
 
-        selected_spec_index: int = 0
-        obj: dict = {}
-        catalogs: List[Catalog] = []
-
-        # Boards breakdown
-        selected_spec_index = getattr(decking_quote.board_specs, 'selected_spec_index', 0)
-        # Check if decking_quote.board_specs.catalogs_spec exists
-        catalogs_exists = getattr(decking_quote.board_specs, 'catalogs_spec', None)
-        # If not, create a board specs catalog
-        if not catalogs_exists:
-            catalogs = services.decking_catalog_board.read_all()
-            obj = {
-                'selected_spec_index': selected_spec_index,
-                'catalogs_spec': self.process_catalog_specs(catalogs)
-            }
-            decking_quote.board_specs = CatalogSpecs(**obj)
-
-        # Railing breakdown
-        selected_spec_index = getattr(decking_quote.railing_specs, 'selected_spec_index', 0)
-        # Check if decking_quote.railing_specs.catalogs_spec exists
-        catalogs_exists = getattr(decking_quote.railing_specs, 'catalogs_spec', None)
-        # If not, create a railing specs catalog
-        if not catalogs_exists:
-            catalogs = services.decking_catalog_railing.read_all()
-            obj = {
-                'selected_spec_index': selected_spec_index,
-                'catalogs_spec': self.process_catalog_specs(catalogs)
-            }
-            decking_quote.railing_specs = CatalogSpecs(**obj)
-
-        # PT Frame
-        selected_spec_index = getattr(decking_quote.pressure_treated_specs, 'selected_spec_index', 0)
-        # Check if decking_quote.pressure_treated_specs.catalogs_spec exists
-        catalogs_exists = getattr(decking_quote.pressure_treated_specs, 'catalogs_spec', None)
-        # If not, create a pressure treated specs catalog
-        if not catalogs_exists:
-            catalogs = services.decking_catalog_pt_frame.read_all()
-            obj = {
-                'selected_spec_index': selected_spec_index,
-                'catalogs_spec': self.process_catalog_specs(catalogs)
-            }
-            decking_quote.pressure_treated_specs = CatalogSpecs(**obj)
-
-        # Structural
-        selected_spec_index = getattr(decking_quote.structural_specs, 'selected_spec_index', 0)
-        # Check if decking_quote.structural_specs.catalogs_spec exists
-        catalogs_exists = getattr(decking_quote.structural_specs, 'catalogs_spec', None)
-        # If not, create a structural specs catalog
-        if not catalogs_exists:
-            catalogs = services.decking_catalog_structural.read_all()
-            obj = {
-                'selected_spec_index': selected_spec_index,
-                'catalogs_spec': self.process_catalog_specs(catalogs)
-            }
-            decking_quote.structural_specs = CatalogSpecs(**obj)
-
-        # Finishing
-        selected_spec_index = getattr(decking_quote.finishing_specs, 'selected_spec_index', 0)
-        # Check if decking_quote.finishing_specs.catalogs_spec exists
-        catalogs_exists = getattr(decking_quote.finishing_specs, 'catalogs_spec', None)
-        # If not, create a finishing specs catalog
-        if not catalogs_exists:
-            catalogs = services.decking_catalog_finishing.read_all()
-            obj = {
-                'selected_spec_index': selected_spec_index,
-                'catalogs_spec': self.process_catalog_specs(catalogs)
-            }
-            decking_quote.finishing_specs = CatalogSpecs(**obj)
-
-        # Rain Scape
-        selected_spec_index = getattr(decking_quote.rain_scape_specs, 'selected_spec_index', 0)
-        # Check if decking_quote.rain_scape_specs.catalogs_spec exists
-        catalogs_exists = getattr(decking_quote.rain_scape_specs, 'catalogs_spec', None)
-        # If not, create a rain scape specs catalog
-        if not catalogs_exists:
-            catalogs = services.decking_catalog_rain_scape.read_all()
-            obj = {
-                'selected_spec_index': selected_spec_index,
-                'catalogs_spec': self.process_catalog_specs(catalogs)
-            }
-            decking_quote.rain_scape_specs = CatalogSpecs(**obj)
+        self.update_catalog_specs(decking_quote, 'board_specs', services.decking_catalog_board)
+        self.update_catalog_specs(decking_quote, 'railing_specs', services.decking_catalog_railing)
+        self.update_catalog_specs(decking_quote, 'pressure_treated_specs', services.decking_catalog_pt_frame)
+        self.update_catalog_specs(decking_quote, 'structural_specs', services.decking_catalog_structural)
+        self.update_catalog_specs(decking_quote, 'finishing_specs', services.decking_catalog_finishing)
+        self.update_catalog_specs(decking_quote, 'rain_scape_specs', services.decking_catalog_rain_scape)
 
         decking_quote.profit = randomFloat(3000, 5000)
         decking_quote.value = randomFloat(15000, 30000)
 
         return decking_quote
 
-    def process_catalog_specs(self, catalogs: List[Catalog]) -> List[CatalogItemSpec]:
+    def update_catalog_specs(self, decking_quote, specs_type, catalog_service):
+        selected_spec_index = getattr(getattr(decking_quote, specs_type), 'selected_spec_index', 0)
+        catalogs_exists = getattr(getattr(decking_quote, specs_type), 'catalogs_spec', None)
+
+        if not catalogs_exists:
+            catalogs = catalog_service.read_all()
+            obj = {
+                'selected_spec_index': selected_spec_index,
+                'catalogs_spec': self.create_catalog_specs(catalogs)
+            }
+            setattr(decking_quote, specs_type, CatalogSpecs(**obj))
+
+    def create_catalog_specs(self, catalogs: List[Catalog]) -> List[CatalogItemSpec]:
         # catalogs_spec
         catalog_specs: List[CatalogItemSpec] = []
         for catalog in catalogs:
