@@ -1,17 +1,18 @@
 from datetime import datetime
 from typing import List
 
-from app import services, repositories
-from app.models.catalog import CatalogItemSpec, CatalogMaterialSpec, CatalogSpecs
-from app.models.catalog import Catalog
-from app.models.decking_quote import (DeckingQuote,
-                                      DeckingQuoteBase, DeckingQuoteCreate,
+from app import repositories, services
+from app.models.catalog import (Catalog, CatalogItemSpec, CatalogMaterialSpec,
+                                CatalogSpecs)
+from app.models.decking_quote import (DeckingQuoteBase, DeckingQuoteCreate,
                                       DeckingQuoteUpdate)
 from app.services.base import BaseService
 from app.utils import randomFloat
 
 
 class DeckingQuoteService(BaseService):
+    def __init__(self, repository):
+        super().__init__(repository)
 
     def create(self, item: DeckingQuoteCreate) -> str | None:
         estimated_item = self.estimate(item)

@@ -4,13 +4,11 @@ from typing import Any, List, Type, TypeVar
 from bson import ObjectId
 from bson.errors import InvalidId
 from fastapi import HTTPException
-from pymongo.results import DeleteResult, UpdateResult, InsertOneResult
+from pymongo.results import DeleteResult, InsertOneResult, UpdateResult
 
 from app.database import db
 from app.models.base import AppBaseModel
 from app.utils import decodeObjId
-
-R = TypeVar('R', bound=AppBaseModel)  # read
 
 
 def raise_error(e: Exception) -> str:
@@ -19,15 +17,15 @@ def raise_error(e: Exception) -> str:
 
 class BaseRepository():
 
-    def __init__(self, collection: str, read_model: Type[R]) -> None:
+    def __init__(self, collection: str, entity) -> None:
         self.collection = db[collection]
-        self.read_model = read_model
+        self.entity = entity
 
     def create(self, item) -> str | None:
         try:
             item_dict: dict = item.model_dump()
             result: InsertOneResult = self.collection.insert_one(item_dict)
-            if (result.inserted_id):
+            if result.inserted_id:
                 return str(result.inserted_id)
 
         except Exception as e:
@@ -35,20 +33,20 @@ class BaseRepository():
 
         return None
 
-    def read_all(self) -> List[R]:
+    def read_all(self) -> List:
         try:
             items_list: List[dict] = list(self.collection.find())
-            items: List[R] = [self.read_model(**decodeObjId(i)) for i in items_list]
+            items = [self.entity(**decodeObjId(i)) for i in items_list]
 
         except Exception as e:
             raise_error(e)
 
         return items
 
-    def read(self, id: str) -> R | None:
+    def read(self, id: str) -> Any | None:
         try:
             if item_dict := self.collection.find_one({'_id': ObjectId(id)}):
-                item: R = self.read_model(**decodeObjId(item_dict))
+                item = self.entity(**decodeObjId(item_dict))
                 return item
 
         except Exception as e:
