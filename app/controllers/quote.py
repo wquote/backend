@@ -29,10 +29,10 @@ async def read_all(type: str | None = None, customerId: str | None = None) -> Li
 @router.get('/{id}', status_code=status.HTTP_200_OK, response_model=Quote)
 async def read(id: str):
     item: Quote | None = service.read(id)
-    if item is not None:
+    if item:
         return item
 
-    raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND_MSG)
 
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
@@ -40,4 +40,4 @@ async def delete(id: str):
     if (services.quote.delete(id)):
         return None
 
-    raise HTTPException(status_code=404, detail=NOT_FOUND_MSG)
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NOT_FOUND_MSG)

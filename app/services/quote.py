@@ -1,5 +1,5 @@
 
-from typing import Any, List
+from typing import List
 
 from app import repositories
 from app.services.base import BaseService
@@ -7,7 +7,7 @@ from app.models.quote import Quote
 
 
 class QuoteService(BaseService):
-    def __init__(self, repository, read_model):
+    def __init__(self, repository):
         super().__init__(repository)
 
     def read_by_customer(self, customer_id: str) -> List[Quote]:
@@ -16,4 +16,4 @@ class QuoteService(BaseService):
         return items
 
 
-quote = QuoteService(repositories.quote, Quote)
+quote = QuoteService(repositories.quote)

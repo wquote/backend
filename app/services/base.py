@@ -1,7 +1,5 @@
 
-from typing import Any, List, Type, TypeVar
-
-from app.models.base import AppBaseModel
+from typing import Any, List
 
 
 class BaseService():

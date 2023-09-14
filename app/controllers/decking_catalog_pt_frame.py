@@ -16,7 +16,7 @@ router = APIRouter(
     prefix='/decking/catalogs/pt-frame',
 )
 
-controller = BaseController(service, item_name, TypeRead, TypeCreate, TypeUpdate)
+controller = BaseController(service, item_name)
 
 
 @router.post('/', status_code=status.HTTP_201_CREATED, response_model=TypeRead | None)

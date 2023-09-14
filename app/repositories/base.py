@@ -13,6 +13,10 @@ def raise_error(e: Exception) -> str:
     raise HTTPException(status_code=500, detail='Validation Error: ' + str(e))
 
 
+def raise_not_found(item_name: str) -> str:
+    raise HTTPException(status_code=404, detail=item_name + ' not found.')
+
+
 class BaseRepository():
 
     def __init__(self, collection: str, entity) -> None:
