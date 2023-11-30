@@ -1,6 +1,6 @@
 from typing import List
 from pydantic import EmailStr, Field
-from pydantic_extra_types.phone_numbers import PhoneNumber
+# from pydantic_extra_types.phone_numbers import PhoneNumber
 
 from app.models.base import AppBaseModel
 
