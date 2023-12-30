@@ -24,7 +24,7 @@ origins = [
     "http://localhost:4201",
     "http://localhost:4200",
     "https://wquote.onrender.com",
-    "https://h-wquote.onrender.com/",
+    "https://h-wquote.onrender.com",
 ]
 
 app.add_middleware(
