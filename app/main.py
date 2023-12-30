@@ -3,7 +3,7 @@
 # [X] motor_asyncio for async requests to database.
 #    -> Maybe not.
 # [X] ObjectId
-#    -> Letting MongoDB create document ids, and tranforming them into strings 
+#    -> Letting MongoDB create document ids, and tranforming them into strings
 #       when reading from DB.
 # [ ] criar paginação nos métodos read_all ($skip e $limit)
 
