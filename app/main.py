@@ -11,12 +11,19 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.controllers import (customer, decking_catalog_board,
-                             decking_catalog_finishing,
-                             decking_catalog_pt_frame, decking_catalog_railing,
-                             decking_catalog_rain_scape,
-                             decking_catalog_structural, decking_quote,
-                             material, quote)
+from app.controllers import (
+    customer,
+    decking_material_order_board,
+    decking_material_order_finishing,
+    decking_material_order_footings,
+    decking_material_order_frame,
+    decking_material_order_galvanized,
+    decking_material_order_railing,
+    decking_material_order_rainscape,
+    decking_quote,
+    material,
+    quote,
+)
 
 app = FastAPI()
 
@@ -46,13 +53,14 @@ app.include_router(material.router)
 app.include_router(quote.router)
 
 app.include_router(decking_quote.router)
-app.include_router(decking_catalog_board.router)
-app.include_router(decking_catalog_railing.router)
-app.include_router(decking_catalog_pt_frame.router)
-app.include_router(decking_catalog_structural.router)
-app.include_router(decking_catalog_finishing.router)
-app.include_router(decking_catalog_rain_scape.router)
+app.include_router(decking_material_order_footings.router)
+app.include_router(decking_material_order_frame.router)
+app.include_router(decking_material_order_galvanized.router)
+app.include_router(decking_material_order_board.router)
+app.include_router(decking_material_order_railing.router)
+app.include_router(decking_material_order_finishing.router)
+app.include_router(decking_material_order_rainscape.router)
 
 
 if __name__ == "__main__":
-    uvicorn.run(app='app.main:app', host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app="app.main:app", host="0.0.0.0", port=8000, reload=True)

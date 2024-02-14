@@ -4,16 +4,16 @@ from fastapi import APIRouter, status
 
 from app import services
 from app.controllers.base import BaseController
-from app.models.material import Material, MaterialCreate, MaterialUpdate
+from app.models.material_order import MaterialOrder, MaterialOrderCreate, MaterialOrderUpdate
 
-service = services.material
-TypeRead = Material
-TypeCreate = MaterialCreate
-TypeUpdate = MaterialUpdate
-item_name = 'Material'
+service = services.decking_material_order_board
+TypeRead = MaterialOrder
+TypeCreate = MaterialOrderCreate
+TypeUpdate = MaterialOrderUpdate
+item_name = 'Decking Material Order Board'
 
 router = APIRouter(
-    prefix='/materials'
+    prefix='/decking/material-order/board',
 )
 
 controller = BaseController(service, item_name)

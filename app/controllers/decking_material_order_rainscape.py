@@ -1,25 +1,25 @@
 
-from typing import List
+from typing import Dict, List
 from fastapi import APIRouter, status
 
 from app import services
 from app.controllers.base import BaseController
-from app.models.catalog import Catalog, CatalogCreate, CatalogUpdate
+from app.models.material_order import MaterialOrder, MaterialOrderCreate, MaterialOrderUpdate
 
-service = services.decking_catalog_structural
-TypeRead = Catalog
-TypeCreate = CatalogCreate
-TypeUpdate = CatalogUpdate
-item_name = 'Decking Structural catalog'
+service = services.decking_material_order_rainscape
+TypeRead = MaterialOrder
+TypeCreate = MaterialOrderCreate
+TypeUpdate = MaterialOrderUpdate
+item_name = 'Decking Material Order Rain Scape'
 
 router = APIRouter(
-    prefix='/decking/catalogs/structural',
+    prefix='/decking/material-order/rainscape',
 )
 
 controller = BaseController(service, item_name)
 
 
-@router.post('/', status_code=status.HTTP_201_CREATED, response_model=TypeRead | None)
+@router.post('/', status_code=status.HTTP_201_CREATED, response_model=Dict | None)
 def create(body: TypeCreate):
     return controller.create(body)
 
