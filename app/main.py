@@ -11,19 +11,19 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.controllers import (
-    customer,
-    decking_material_order_board,
-    decking_material_order_finishing,
-    decking_material_order_footings,
-    decking_material_order_frame,
-    decking_material_order_galvanized,
-    decking_material_order_railing,
-    decking_material_order_rainscape,
-    decking_quote,
-    material,
-    quote,
+from app.decking_material_order.rain_scape import (
+    dmo_rain_scape_controller,
 )
+from app.customer import customer_controller
+from app.decking_material_order.board import dmo_board_controller
+from app.decking_material_order.finishing import dmo_finishing_controller
+from app.decking_material_order.footing import dmo_footing_controller
+from app.decking_material_order.frame import dmo_frame_controller
+from app.decking_material_order.galvanized import dmo_galvanized_controller
+from app.decking_material_order.railing import dmo_railing_controller
+from app.decking_quote import decking_quote_controller
+from app.material import material_controller
+from app.quote import quote_controller
 
 app = FastAPI()
 
@@ -48,18 +48,18 @@ async def root():
     return {"message": "Hello, wQuoter!"}
 
 
-app.include_router(customer.router)
-app.include_router(material.router)
-app.include_router(quote.router)
+app.include_router(customer_controller.router)
+app.include_router(material_controller.router)
+app.include_router(quote_controller.router)
+app.include_router(decking_quote_controller.router)
 
-app.include_router(decking_quote.router)
-app.include_router(decking_material_order_footings.router)
-app.include_router(decking_material_order_frame.router)
-app.include_router(decking_material_order_galvanized.router)
-app.include_router(decking_material_order_board.router)
-app.include_router(decking_material_order_railing.router)
-app.include_router(decking_material_order_finishing.router)
-app.include_router(decking_material_order_rainscape.router)
+app.include_router(dmo_footing_controller.router)
+app.include_router(dmo_frame_controller.router)
+app.include_router(dmo_galvanized_controller.router)
+app.include_router(dmo_board_controller.router)
+app.include_router(dmo_railing_controller.router)
+app.include_router(dmo_finishing_controller.router)
+app.include_router(dmo_rain_scape_controller.router)
 
 
 if __name__ == "__main__":
