@@ -26,18 +26,18 @@ def estimate_areas(areas: List[Area] | None, size: str = "") -> float:
     if not areas:
         return 0.0
 
-    ledger_board: float = 0.0
+    joist: float = 0.0
     beam_grade: float = 0.0
     wphi: float = 0.0
     support_post: float = 0.0
 
     for area in areas:
-        ledger_board += estimate_ledger_board(area.ledger_board, size)
+        joist += estimate_joist(area.ledger_board, size) # joist
         beam_grade += estimate_beam(area.beam_grade, size)
-        wphi += estimate_deck_grade(area.width, area.deck_grade, size) * estimate_phi(area.depth)
+        wphi += estimate_deck_grade(area.width, area.deck_grade, size) * phi(area.depth)
         support_post += estimate_support_post(area.height, area.support_post_grade, size)
 
-    return ledger_board + beam_grade + wphi + support_post
+    return joist + beam_grade + wphi + support_post
 
 
 def estimate_stair(stairs: List[Stair] | None, size: str = "") -> float:
@@ -56,7 +56,7 @@ def estimate_stair(stairs: List[Stair] | None, size: str = "") -> float:
     return beam_grade + stringer + support_post_grade
 
 
-def estimate_ledger_board(ledger_board: QtySize | None, size: str = "") -> float:
+def estimate_joist(ledger_board: QtySize | None, size: str = "") -> float:
     if ledger_board is None or ledger_board.qty is None or ledger_board.size != size:
         return 0.0
 
@@ -84,29 +84,29 @@ def estimate_deck_grade(width: float | None, deck_grade: str | None, size: str =
     return math.ceil(width * 0.75 + 5)
 
 
-def estimate_phi(depth: float | None) -> float:
-    if not depth:
+def phi(value: float | None) -> float:
+    if not value:
         return 0
 
-    if depth > 24:
-        return depth
-    elif depth > 18:
+    if value > 24:
+        return value
+    elif value > 18:
         return 24
-    elif depth > 16:
+    elif value > 16:
         return 20
-    elif depth > 14:
+    elif value > 14:
         return 16
-    elif depth > 12:
+    elif value > 12:
         return 14
-    elif depth > 10:
+    elif value > 10:
         return 12
-    elif depth > 8:
+    elif value > 8:
         return 10
-    elif depth > 6:
+    elif value > 6:
         return 8
-    elif depth > 5:
+    elif value > 5:
         return 6
-    elif depth > 4:
+    elif value > 4:
         return 5
     else:
         return 4
@@ -123,7 +123,14 @@ def estimate_stair_stringer(stair: Stair | None, size: str = "") -> float:
     if not stair or not stair.riser or not stair.width or not size or size != "2x12":
         return 0.0
 
-    return math.ceil(stair.riser * 12 / 7 - 1) * math.ceil(stair.width + 1)
+    total_riser = stair.riser
+    riser = math.ceil(total_riser * 12 / 7.5)
+    treads = riser - 1
+
+    stringer_length = math.ceil(((treads * 10 / 12) ** 2 + (total_riser) ** 2) ** 0.5)
+    stringer_length_phi = phi(stringer_length)
+    return  stringer_length_phi * math.ceil(stair.width + 1)
+    # return math.ceil(stair.riser * 12 / 7 - 1) * math.ceil(stair.width + 1)
 
 
 def estimate_stair_support_post_grade(stair: Stair | None, size: str = "") -> float:
