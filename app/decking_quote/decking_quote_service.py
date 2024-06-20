@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import HTTPException
 
-from app.decking_quote.decking_quote_models import (
+from app.decking_quote.decking_quote_model import (
     DeckTakeOff,
     DeckingMaterialOrderSpecs,
     DeckingQuoteBase,
@@ -35,6 +35,8 @@ from app.decking_material_order.finishing.dmo_finishing_service import (
 from app.decking_material_order.rain_scape.dmo_rain_scape_service import (
     dmo_rain_scape_service,
 )
+
+from app.shared import dmo_service
 
 
 class DeckingQuoteService(BaseService):
@@ -87,21 +89,14 @@ class DeckingQuoteService(BaseService):
             return dmo_specs
 
         dmo_footings_specs: MaterialOrderSpecs = dmo_footing_service.estimate_material_order(deck_take_off.footings)
-
-        # self.create_material_order_specs(deck_take_off, "footings", dmo_footing_service)
-        # self.create_material_order_specs(deck_take_off, "frame", dmo_frame_service)
-        # self.create_material_order_specs(deck_take_off, "galvanized", dmo_galvanized_service)
-        # self.create_material_order_specs(deck_take_off, "board", dmo_board_service)
-        # self.create_material_order_specs(deck_take_off, "railing", dmo_railing_service)
-        # self.create_material_order_specs(deck_take_off, "finishing", dmo_finishing_service)
-        # self.create_material_order_specs(deck_take_off, "rain_scape", dmo_rain_scape_service)
+        dmo_frame_specs: MaterialOrderSpecs = dmo_frame_service.estimate_material_order(deck_take_off.layout)
 
         # decking_quote.profit = randomFloat(3000, 5000)
         # decking_quote.value = randomFloat(15000, 30000)
 
         dmo_specs = DeckingMaterialOrderSpecs(
             footings=dmo_footings_specs,
-            frame=None,
+            frame=dmo_frame_specs,
             galvanized=None,
             board=None,
             railing=None,
@@ -115,15 +110,6 @@ class DeckingQuoteService(BaseService):
         decking_quote.material_order = self.create_material_order(decking_quote.deck_take_off)
 
         return self.update(id, decking_quote)
-
-    # def estimate_material_order(self, id: str, decking_quote: DeckingQuoteUpdate) -> bool:
-
-    #     if not decking_quote.deck_take_off or not decking_quote.material_order:
-    #         return False
-
-    #     dmo_footing_service.update_material_order_estimated_qty(decking_quote.deck_take_off.footings, decking_quote.material_order.footings)
-
-    #     return self.update(id, decking_quote)
 
 
 decking_quote_service = DeckingQuoteService(decking_quote_repository)

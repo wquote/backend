@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException, status
 
-from app.quote.quote_models import Quote, QuoteCreate, QuoteUpdate
+from app.quote.quote_model import Quote, QuoteCreate, QuoteUpdate
 from app.quote.quote_service import quote_service
 from app.shared.base_controller import BaseController
 

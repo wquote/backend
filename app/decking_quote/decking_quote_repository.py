@@ -1,6 +1,6 @@
 from app.shared.base_repository import BaseRepository
 
-from .decking_quote_models import DeckingQuote
+from .decking_quote_model import DeckingQuote
 
 collection = "quotes"
 entity = DeckingQuote

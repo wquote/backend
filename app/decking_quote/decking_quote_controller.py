@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from fastapi import APIRouter, HTTPException, status
 
-from app.decking_quote.decking_quote_models import (
+from app.decking_quote.decking_quote_model import (
     DeckingQuote,
     DeckingQuoteCreate,
     DeckingQuoteUpdate,

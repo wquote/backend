@@ -1,6 +1,6 @@
 from typing import List
 
-from app.quote.quote_models import Quote
+from app.quote.quote_model import Quote
 from app.quote.quote_repository import quote_repository
 from app.shared.base_service import BaseService
 

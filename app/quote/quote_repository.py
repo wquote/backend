@@ -1,7 +1,7 @@
 from typing import List
 
 from app.database import db
-from app.quote.quote_models import Quote
+from app.quote.quote_model import Quote
 from app.shared.base_repository import BaseRepository
 from app.utils import decodeObjId
 

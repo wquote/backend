@@ -1,7 +1,7 @@
 # from datetime import datetime
 from typing import Any, List
 
-from app.quote.quote_models import Quote, QuoteBase, QuoteCreate
+from app.quote.quote_model import Quote, QuoteBase, QuoteCreate
 from app.shared.base_model import AppBaseModel
 from app.shared.material_order_model import MaterialOrderSpecs
 
@@ -19,26 +19,35 @@ class DescQtyCost(AppBaseModel):
     cost: float | None = None
 
 
+class QtySize(AppBaseModel):
+    qty: float | None = None
+    size: str | None = None
+
+
 class Area(AppBaseModel):
+    deck_grade: str | None = None
+    ledger_board: QtySize | None = None
+    ledger_attaches_to: str | None = None
+    support_post_grade: QtySize | None = None
     width: float | None = None
     depth: float | None = None
     height: float | None = None
+    picture_frame: float | None = None
+    beam_grade: QtySize | None = None
 
 
 class Stair(AppBaseModel):
     width: float | None = None
     riser: float | None = None
+    support_post_grade: QtySize | None = None
+    beam_grade: QtySize | None = None
+    railings_on: str | None = None
 
 
 class Layout(AppBaseModel):
     main_areas: List[Area] | None = None
     lading_areas: List[Area] | None = None
     stairs: List[Stair] | None = None
-
-
-class QtySize(AppBaseModel):
-    qty: float | None = None
-    size: str | None = None
 
 
 class Footings(AppBaseModel):
