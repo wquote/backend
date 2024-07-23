@@ -55,10 +55,9 @@ class BaseController:
             HTTPException: If no items are found.
         """
         items: List = self.service.read_all()
-        if items:
-            return items
+        return items
 
-        raise HTTPException(status_code=404, detail=self.NOT_FOUND_MSG)
+        # raise HTTPException(status_code=404, detail=self.NOT_FOUND_MSG)
 
     def read(self, id: str) -> Any:
         """
@@ -95,7 +94,7 @@ class BaseController:
         if self.service.update(id, body):
             return True
 
-        raise HTTPException(status_code=404, detail=self.NOT_FOUND_MSG)
+        return False
 
     def delete(self, id: str) -> bool:
         """
@@ -113,4 +112,4 @@ class BaseController:
         if self.service.delete(id):
             return True
 
-        raise HTTPException(status_code=404, detail=self.NOT_FOUND_MSG)
+        return False
