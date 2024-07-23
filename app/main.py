@@ -25,7 +25,7 @@ from app.decking_quote import decking_quote_controller
 from app.material import material_controller
 from app.quote import quote_controller
 
-app = FastAPI()
+app = FastAPI(title="wQuote API", version="0.0.1")
 
 origins = [
     "http://localhost:4201",
@@ -50,8 +50,8 @@ async def root():
 
 app.include_router(customer_controller.router)
 app.include_router(material_controller.router)
-app.include_router(quote_controller.router)
 app.include_router(decking_quote_controller.router)
+app.include_router(quote_controller.router)
 
 app.include_router(dmo_footing_controller.router)
 app.include_router(dmo_frame_controller.router)
