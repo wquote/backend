@@ -34,8 +34,7 @@ class Quote(QuoteBase):
 
 
 class QuoteCreate(QuoteBase):
-    customer_id: str = ""
-    job_address: str = ""
+    pass
 
 
 class QuoteUpdate(QuoteBase):

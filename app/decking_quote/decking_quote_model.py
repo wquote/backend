@@ -45,9 +45,9 @@ class Stair(AppBaseModel):
 
 
 class Layout(AppBaseModel):
-    main_areas: List[Area] | None = None
-    lading_areas: List[Area] | None = None
-    stairs: List[Stair] | None = None
+    main_areas: List[Area] | None = []
+    lading_areas: List[Area] | None = []
+    stairs: List[Stair] | None = []
 
 
 class Footings(AppBaseModel):
@@ -59,9 +59,9 @@ class Footings(AppBaseModel):
 class DeckTakeOff(AppBaseModel):
     footings: Footings | None = None
     layout: Layout | None = None
-    railing: List[Any] | None = None
-    finishing: List[Any] | None = None
-    rains_cape: List[Any] | None = None
+    railing: List[Any] | None = []
+    finishing: List[Any] | None = []
+    rains_cape: List[Any] | None = []
 
 
 class DeckingMaterialOrderSpecs(AppBaseModel):
@@ -72,14 +72,14 @@ class DeckingMaterialOrderSpecs(AppBaseModel):
     railing: MaterialOrderSpecs | None = None
     finishing: MaterialOrderSpecs | None = None
     rain_scape: MaterialOrderSpecs | None = None
-    extra_materials: List[DescQtyCost] | None = None
+    extra_materials: List[DescQtyCost] | None = []
 
 
 class DeckingQuoteBase(QuoteBase):
     deck_take_off: DeckTakeOff | None = None
     material_order: DeckingMaterialOrderSpecs | None = None
-    labor_costs: List[DescCost] | None = None
-    other_costs: List[DescQtyCost] | None = None
+    labor_costs: List[DescCost] | None = []
+    other_costs: List[DescQtyCost] | None = []
 
 
 class DeckingQuote(Quote, DeckingQuoteBase):
