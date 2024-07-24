@@ -43,10 +43,10 @@ def update(id: str, body: TypeUpdate):
     return controller.update(id, body)
 
 
-@router.put("/{id}/estimate", status_code=status.HTTP_200_OK, response_model=bool)
+@router.put("/{id}/estimate", status_code=status.HTTP_200_OK, response_model=None)
 def estimate(id: str, body: TypeUpdate):
     if service.update_material_order(id, body):
-        return True
+        return 
 
     raise HTTPException(status_code=404, detail=item_name + " not found.")
 
