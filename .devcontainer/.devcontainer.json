@@ -1,0 +1,20 @@
+{
+    "workspaceFolder": "/opt",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "eamodio.gitlens",
+                "github.copilot",
+                "github.copilot-chat",
+                "matangover.mypy",
+                "mongodb.mongodb-vscode",
+                "ms-python.black-formatter",
+                "ms-python.debugpy",
+                "ms-python.isort",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "rangav.vscode-thunder-client"
+            ]
+        }
+    }
+}
