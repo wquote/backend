@@ -31,7 +31,6 @@ class MaterialOrderSpecs(AppBaseModel):
 # Lista de pedido de materiais editavel pelo admin
 class MaterialOrderItem(AppBaseModel):
     id: str
-    is_default: bool
     formula: str | None = None
 
 
