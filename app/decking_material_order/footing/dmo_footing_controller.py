@@ -4,15 +4,15 @@ from fastapi import APIRouter, status
 
 from app.shared.base_controller import BaseController
 from app.shared.material_order_model import (
-    MaterialOrder,
     MaterialOrderCreate,
+    MaterialOrderDTO,
     MaterialOrderUpdate,
 )
 
 from .dmo_footing_service import dmo_footing_service
 
 service = dmo_footing_service
-TypeRead = MaterialOrder
+TypeRead = MaterialOrderDTO
 TypeCreate = MaterialOrderCreate
 TypeUpdate = MaterialOrderUpdate
 item_name = "Decking Material Order Footings"

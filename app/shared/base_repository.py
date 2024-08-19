@@ -28,17 +28,17 @@ class BaseRepository():
 
     Args:
         collection (str): The name of the MongoDB collection.
-        entity: The entity class representing the data model.
+        dto: The dto class representing the data model.
 
     Attributes:
         collection: The MongoDB collection object.
-        entity: The entity class representing the data model.
+        dto: The dto class representing the data model.
 
     """
 
-    def __init__(self, collection: str, entity) -> None:
+    def __init__(self, collection: str, dto) -> None:
         self.collection = db[collection]
-        self.entity = entity
+        self.dto = dto
 
     def create(self, item) -> str | None:
         """
@@ -78,7 +78,7 @@ class BaseRepository():
         """
         try:
             items_list: List[dict] = list(self.collection.find())
-            items = [self.entity(**decodeObjId(i)) for i in items_list]
+            items = [self.dto(**decodeObjId(i)) for i in items_list]
 
         except Exception as e:
             raise_error(e)
@@ -102,10 +102,10 @@ class BaseRepository():
         """
         try:
             if item_dict := self.collection.find_one({'_id': ObjectId(id)}):
-                item = self.entity(**decodeObjId(item_dict))
+                item = self.dto(**decodeObjId(item_dict))
                 return item
             else:
-                raise_not_found(self.entity.__name__)
+                raise_not_found(self.dto.__name__)
 
         except Exception as e:
             raise_error(e)
@@ -134,7 +134,7 @@ class BaseRepository():
             if (result.matched_count == 1):
                 return True
             else:
-                raise_not_found(self.entity.__name__)
+                raise_not_found(self.dto.__name__)
 
         except Exception as e:
             raise_error(e)
@@ -161,7 +161,7 @@ class BaseRepository():
             if (result.deleted_count == 1):
                 return True
             else:
-                raise_not_found(self.entity.__name__)
+                raise_not_found(self.dto.__name__)
 
         except Exception as e:
             raise_error(e)

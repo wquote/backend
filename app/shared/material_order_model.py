@@ -49,3 +49,12 @@ class MaterialOrderCreate(MaterialOrderBase):
 
 class MaterialOrderUpdate(MaterialOrderBase):
     pass
+
+
+class MaterialOrderSpecItemDTO(MaterialOrderItem):
+    name: str | None = None
+
+
+class MaterialOrderDTO(MaterialOrderBase):
+    id: str
+    materials: List[MaterialOrderSpecItemDTO] | None = None

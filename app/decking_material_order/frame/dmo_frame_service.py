@@ -4,6 +4,8 @@ from app.shared.material_order_model import MaterialOrderSpecs
 
 from .dmo_frame_repository import dmo_frame_repository
 
+repository = dmo_frame_repository
+
 
 class DeckingMaterialOrderFrameService(DeckingMaterialOrderSpecService):
     def __init__(self, repository):
@@ -12,4 +14,5 @@ class DeckingMaterialOrderFrameService(DeckingMaterialOrderSpecService):
     def estimate_material_order(self, layout: Layout | None) -> MaterialOrderSpecs:
         return super().estimate_material_order(layout)
 
-dmo_frame_service = DeckingMaterialOrderFrameService(dmo_frame_repository)
+
+dmo_frame_service = DeckingMaterialOrderFrameService(repository)
