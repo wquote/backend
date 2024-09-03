@@ -1,6 +1,7 @@
 from typing import Dict, List
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
+from app.auth.auth_service import is_authenticated
 from app.shared.base_controller import BaseController
 from app.shared.material_order_model import (
     MaterialOrder,
@@ -18,6 +19,7 @@ item_name = "Decking Material Order Finishing"
 
 router = APIRouter(
     prefix="/decking/material-order/finishing",
+    dependencies=[Depends(is_authenticated)],
 )
 
 controller = BaseController(service, item_name)

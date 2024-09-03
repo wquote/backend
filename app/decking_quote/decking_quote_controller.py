@@ -1,7 +1,8 @@
 from typing import Dict, List
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.auth.auth_service import is_authenticated
 from app.decking_quote.decking_quote_model import (
     DeckingQuote,
     DeckingQuoteCreate,
@@ -18,6 +19,7 @@ item_name = "Decking Quote"
 
 router = APIRouter(
     prefix="/quotes/decking",
+    dependencies=[Depends(is_authenticated)],
 )
 
 controller = BaseController(service, item_name)

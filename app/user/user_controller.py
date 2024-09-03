@@ -1,7 +1,8 @@
 from typing import Dict, List
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
+from app.auth.auth_service import is_authenticated
 from app.shared.base_controller import BaseController
 
 from .user_model import User, UserCreate, UserUpdate
@@ -13,7 +14,10 @@ TypeCreate = UserCreate
 TypeUpdate = UserUpdate
 item_name = "User"
 
-router = APIRouter(prefix="/users")
+router = APIRouter(
+    prefix="/users",
+    dependencies=[Depends(is_authenticated)],
+)
 
 controller = BaseController(service, item_name)
 

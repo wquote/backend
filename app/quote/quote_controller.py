@@ -1,7 +1,8 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.auth.auth_service import is_authenticated
 from app.quote.quote_model import Quote, QuoteCreate, QuoteUpdate
 from app.quote.quote_service import quote_service
 from app.shared.base_controller import BaseController
@@ -13,7 +14,10 @@ TypeCreate = QuoteCreate
 TypeUpdate = QuoteUpdate
 item_name = "Quote"
 
-router = APIRouter(prefix="/quotes")
+router = APIRouter(
+    prefix="/quotes",
+    dependencies=[Depends(is_authenticated)],
+)
 
 contoller = BaseController(service, item_name)
 

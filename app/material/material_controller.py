@@ -1,7 +1,8 @@
 from typing import Dict, List
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
+from app.auth.auth_service import is_authenticated
 from app.material.material_models import Material, MaterialCreate, MaterialUpdate
 from app.material.material_service import material_service
 from app.shared.base_controller import BaseController
@@ -12,7 +13,10 @@ TypeCreate = MaterialCreate
 TypeUpdate = MaterialUpdate
 item_name = "Material"
 
-router = APIRouter(prefix="/materials")
+router = APIRouter(
+    prefix="/materials",
+    dependencies=[Depends(is_authenticated)],
+)
 
 controller = BaseController(service, item_name)
 

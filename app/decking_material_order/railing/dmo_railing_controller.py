@@ -1,13 +1,10 @@
 from typing import Dict, List
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
+from app.auth.auth_service import is_authenticated
 from app.shared.base_controller import BaseController
-from app.shared.material_order_model import (
-    MaterialOrder,
-    MaterialOrderCreate,
-    MaterialOrderUpdate,
-)
+from app.shared.material_order_model import MaterialOrder, MaterialOrderCreate, MaterialOrderUpdate
 
 from .dmo_railing_service import dmo_railing_service
 
@@ -17,7 +14,10 @@ TypeCreate = MaterialOrderCreate
 TypeUpdate = MaterialOrderUpdate
 item_name = "Decking Material Order Railing"
 
-router = APIRouter(prefix="/decking/material-order/railing")
+router = APIRouter(
+    prefix="/decking/material-order/railing",
+    dependencies=[Depends(is_authenticated)],
+)
 
 controller = BaseController(service, item_name)
 
