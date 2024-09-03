@@ -34,6 +34,10 @@ class MaterialOrderItem(AppBaseModel):
     formula: str | None = None
 
 
+class MaterialOrderItemDTO(MaterialOrderItem):
+    name: str | None = None
+
+
 class MaterialOrderBase(AppBaseModel):
     name: str | None = None
     materials: List[MaterialOrderItem] | None = None
@@ -43,18 +47,14 @@ class MaterialOrder(MaterialOrderBase):
     id: str
 
 
+class MaterialOrderDTO(MaterialOrderBase):
+    id: str
+    materials: List[MaterialOrderItemDTO] | None = None
+
+
 class MaterialOrderCreate(MaterialOrderBase):
     pass
 
 
 class MaterialOrderUpdate(MaterialOrderBase):
     pass
-
-
-class MaterialOrderSpecItemDTO(MaterialOrderItem):
-    name: str | None = None
-
-
-class MaterialOrderDTO(MaterialOrderBase):
-    id: str
-    materials: List[MaterialOrderSpecItemDTO] | None = None
