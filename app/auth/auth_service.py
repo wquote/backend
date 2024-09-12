@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated, Literal
 
 import jwt
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 
@@ -26,7 +26,7 @@ class Token(AppBaseModel):
 
 SECRET_KEY: str = os.getenv("AUTH_SECRET_KEY") or ""
 ALGORITHM: str = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
 router = APIRouter()
 
@@ -80,6 +80,9 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
 
         user: UserInDB = get_user(username)
 
+    except jwt.ExpiredSignatureError:
+        raise credentials_exception
+
     except Exception as e:
         raise_error(e)
 
@@ -110,6 +113,17 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
         raise_error(e)
 
     return Token(access_token=access_token, token_type="bearer")
+
+
+@router.get("/auth/token/validate")
+async def validate_token(token: Annotated[str, Depends(oauth2_scheme)]):
+    try:
+        token_payload: dict = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return {"message": "Token is valid."}
+    except jwt.ExpiredSignatureError:
+        return Response(status_code=status.HTTP_401_UNAUTHORIZED)
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token is invalid")
 
 
 @router.get("/users/me", response_model=User)
