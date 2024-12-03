@@ -48,6 +48,8 @@ class Layout(AppBaseModel):
     main_areas: List[Area] | None = []
     lading_areas: List[Area] | None = []
     stairs: List[Stair] | None = []
+    dtt1z: int | None = None
+    dtt2z: int | None = None
 
 
 class Footings(AppBaseModel):
