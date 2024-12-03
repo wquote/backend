@@ -50,6 +50,7 @@ class Layout(AppBaseModel):
     stairs: List[Stair] | None = []
     dtt1z: int | None = None
     dtt2z: int | None = None
+    tape_on_joists: bool | None = None
 
 
 class Footings(AppBaseModel):
