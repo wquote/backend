@@ -1,18 +1,15 @@
 from typing import Dict, List
+
 from fastapi import APIRouter, Depends, status
 
 from app.auth.auth_service import is_authenticated
 from app.shared.base_controller import BaseController
-from app.shared.material_order_model import (
-    MaterialOrder,
-    MaterialOrderCreate,
-    MaterialOrderUpdate,
-)
+from app.shared.material_order_model import MaterialOrderCreate, MaterialOrderDTO, MaterialOrderUpdate
 
 from .dmo_galvanized_service import dmo_galvanized_service
 
 service = dmo_galvanized_service
-TypeRead = MaterialOrder
+TypeRead = MaterialOrderDTO
 TypeCreate = MaterialOrderCreate
 TypeUpdate = MaterialOrderUpdate
 item_name = "Decking Material Order Galvanized"

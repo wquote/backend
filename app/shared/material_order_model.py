@@ -6,8 +6,9 @@ from app.shared.base_model import AppBaseModel
 # MaterialOrderSpecs = footings, frame, galvanized strap, decking board, railing sysyem, finishing, rain scape, extra materials
 
 
-# Snapshot da lista de pedido de materiais para a cotacao
+# Especificação da lista de pedido de materiais para a cotacao
 class MaterialOrderSpecItem(AppBaseModel):
+    reference_snapshot: str = ""
     desc_snapshot: str = ""
     price_snapshot: float = 0.0
     formula_snapshot: str = ""
@@ -28,10 +29,11 @@ class MaterialOrderSpecs(AppBaseModel):
 
 
 # ###############################################
-# Lista de pedido de materiais editavel pelo admin
+# Template de lista de pedido de materiais
 class MaterialOrderItem(AppBaseModel):
     id: str
     formula: str | None = None
+    group_order: int | None = None # field to sort materials do to be estimated
 
 
 class MaterialOrderItemDTO(MaterialOrderItem):

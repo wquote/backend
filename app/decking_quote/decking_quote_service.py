@@ -3,62 +3,34 @@ from typing import List
 
 from fastapi import HTTPException
 
+from app.decking_material_order.board.dmo_board_service import dmo_board_service
+from app.decking_material_order.finishing.dmo_finishing_service import dmo_finishing_service
+from app.decking_material_order.footing.dmo_footing_service import dmo_footing_service
+from app.decking_material_order.frame.dmo_frame_service import dmo_frame_service
+from app.decking_material_order.galvanized.dmo_galvanized_service import dmo_galvanized_service
+from app.decking_material_order.railing.dmo_railing_service import dmo_railing_service
+from app.decking_material_order.rain_scape.dmo_rain_scape_service import dmo_rain_scape_service
 from app.decking_quote.decking_quote_model import (
-    DeckTakeOff,
     DeckingMaterialOrderSpecs,
     DeckingQuoteBase,
     DeckingQuoteCreate,
     DeckingQuoteUpdate,
+    DeckTakeOff,
     Footings,
 )
 from app.decking_quote.decking_quote_repository import decking_quote_repository
 from app.material.material_service import material_service
-from app.shared.base_service import BaseService
-from app.shared.material_order_model import (
-    MaterialOrder,
-    MaterialOrderSpec,
-    MaterialOrderSpecItem,
-    MaterialOrderSpecs,
-)
-from app.utils import randomFloat
-
-from app.decking_material_order.footing.dmo_footing_service import dmo_footing_service
-from app.decking_material_order.frame.dmo_frame_service import dmo_frame_service
-from app.decking_material_order.galvanized.dmo_galvanized_service import (
-    dmo_galvanized_service,
-)
-from app.decking_material_order.board.dmo_board_service import dmo_board_service
-from app.decking_material_order.railing.dmo_railing_service import dmo_railing_service
-from app.decking_material_order.finishing.dmo_finishing_service import (
-    dmo_finishing_service,
-)
-from app.decking_material_order.rain_scape.dmo_rain_scape_service import (
-    dmo_rain_scape_service,
-)
-
 from app.shared import dmo_service
+from app.shared.base_service import BaseService
+from app.shared.material_order_model import MaterialOrderSpecs
+from app.utils import randomFloat
 
 
 class DeckingQuoteService(BaseService):
     def __init__(self, repository):
         super().__init__(repository)
 
-    from fastapi import HTTPException
-
     def create(self, item: DeckingQuoteCreate) -> str:
-        """
-        Creates a new decking quote.
-
-        Args:
-            item (DeckingQuoteCreate): The decking quote data.
-
-        Returns:
-            str: The ID of the inserted decking quote.
-
-        Raises:
-            HTTPException: If the insertion failed.
-        """
-
         self.update_dates(item)
 
         item.material_order = self.create_material_order(item.deck_take_off)
@@ -90,6 +62,7 @@ class DeckingQuoteService(BaseService):
 
         dmo_footings_specs: MaterialOrderSpecs = dmo_footing_service.estimate_material_order(deck_take_off.footings)
         dmo_frame_specs: MaterialOrderSpecs = dmo_frame_service.estimate_material_order(deck_take_off.layout)
+        dmo_galvanized_specs: MaterialOrderSpecs = dmo_galvanized_service.estimate_material_order(deck_take_off.layout)
 
         # decking_quote.profit = randomFloat(3000, 5000)
         # decking_quote.value = randomFloat(15000, 30000)
@@ -97,7 +70,7 @@ class DeckingQuoteService(BaseService):
         dmo_specs = DeckingMaterialOrderSpecs(
             footings=dmo_footings_specs,
             frame=dmo_frame_specs,
-            galvanized=None,
+            galvanized=dmo_galvanized_specs,
             board=None,
             railing=None,
             finishing=None,

@@ -1,13 +1,13 @@
-from app.shared.material_order_model import MaterialOrder
-from app.shared.base_repository import BaseRepository
+from app.shared.dmo_repository import DmoRepository
+from app.shared.material_order_model import MaterialOrderDTO
 
 collection = "decking_material_order_galvanized"
-entity = MaterialOrder
+dto = MaterialOrderDTO
 
 
-class DeckingMaterialOrderGalvanizedRepository(BaseRepository):
-    def __init__(self, collection: str, entity):
-        super().__init__(collection, entity)
+class DeckingMaterialOrderGalvanizedRepository(DmoRepository):
+    def __init__(self, collection: str, dto):
+        super().__init__(collection, dto)
 
 
-dmo_galvanized_repository = DeckingMaterialOrderGalvanizedRepository(collection, entity)
+dmo_galvanized_repository = DeckingMaterialOrderGalvanizedRepository(collection, dto)
